@@ -35,6 +35,11 @@ public class DriveOp_BETA extends LinearOpMode {
 
         while (opModeIsActive()){
 
+            /**
+             * Various equations to set up motor powers before they are staged
+             * to the motor
+             */
+
             double r = Math.hypot(gp1.left_stick_x, gp1.left_stick_y);
             double robotAngle = Math.atan2(gp1.left_stick_y, gp1.left_stick_x) - Math.PI / 4;
             double rightX = gp1.right_stick_x;
@@ -46,10 +51,10 @@ public class DriveOp_BETA extends LinearOpMode {
             double leftCollPwr = gp1.right_trigger;
             double rightCollPwr = -gp1.right_trigger;
 
-            //leftFront.setPower(v1);
-            //rightFront.setPower(v2);
-            //leftRear.setPower(v3);
-            //rightRear.setPower(v4);
+            /**
+             * staging the created power values
+             */
+
             frontLeft.setPower(v1);
             frontRight.setPower(v2);
             backLeft.setPower(v3);
@@ -57,6 +62,10 @@ public class DriveOp_BETA extends LinearOpMode {
 
             leftColl.setPower(leftCollPwr);
             rightColl.setPower(rightCollPwr);
+
+            /**
+             * boolean loops for motor/servo control
+             */
 
             if(gp1.dpad_up){
                 spool.setPower(1);
