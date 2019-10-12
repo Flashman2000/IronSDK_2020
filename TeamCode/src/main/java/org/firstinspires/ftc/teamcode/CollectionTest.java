@@ -33,24 +33,41 @@ public class CollectionTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            double leftCollPwr = gamepad1.right_trigger * 0.5;
-            double rightCollPwr = gamepad1.right_trigger * 0.5;
-
-            leftColl.setPower(leftCollPwr);
-            rightColl.setPower(rightCollPwr);
-
-            if(gamepad1.a){
-                rightPiv.setPosition(1);
-            }
-            if(gamepad1.b){
-                rightPiv.setPosition(0);
-            }
-            if(gamepad1.x){
-                leftPiv.setPosition(1);
-            }
             if(gamepad1.y){
-                leftPiv.setPosition(0);
+
+                leftColl.setPower(0);
+                rightColl.setPower(0);
+
             }
+
+            if(gamepad1.right_bumper){
+                leftColl.setPower(0.5);
+                rightColl.setPower(0.5);
+
+            }
+
+            if(gamepad1.left_bumper){
+                leftColl.setPower(-0.7);
+                rightColl.setPower(-0.7);
+            }
+
+            if(gamepad1.dpad_up){
+
+                rightPiv.setPosition(1);
+                leftPiv.setPosition(0);
+
+            }
+
+            if(gamepad1.dpad_down){
+
+                rightPiv.setPosition(0);
+                leftPiv.setPosition(1);
+
+            }
+
+            telemetry.addData("Right pivot servo", rightPiv.getPosition());
+            telemetry.addData("Left pivot servo", leftPiv.getPosition());
+            telemetry.update();
 
 
         }
