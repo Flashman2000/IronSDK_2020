@@ -16,8 +16,11 @@ public class CollectionTest extends LinearOpMode {
     Servo leftPiv = null;
     Servo rightPiv = null;
 
+    String intakeCurrentMode = "Idle";
+    String collCurrentOrientation = "Stowed";
+
     @Override
-    public void runOpMode(){
+    public void runOpMode() {
 
         leftColl = hardwareMap.get(DcMotor.class, "leftcoll");
         rightColl = hardwareMap.get(DcMotor.class, "rightcoll");
@@ -33,45 +36,65 @@ public class CollectionTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if(gamepad1.y){
+            if (gamepad1.y) {
 
                 leftColl.setPower(0);
                 rightColl.setPower(0);
+                intakeCurrentMode = "Idle";
 
             }
 
-            if(gamepad1.right_bumper){
+            if (gamepad1.right_bumper) {
                 leftColl.setPower(0.5);
                 rightColl.setPower(0.5);
+                intakeCurrentMode = "Collecting";
 
             }
 
-            if(gamepad1.left_bumper){
+            if (gamepad1.left_bumper) {
                 leftColl.setPower(-0.7);
                 rightColl.setPower(-0.7);
+                intakeCurrentMode = "Ejecting";
             }
 
-            if(gamepad1.dpad_up){
+            if (gamepad1.dpad_up) {
 
                 rightPiv.setPosition(1);
                 leftPiv.setPosition(0);
+                collCurrentOrientation = "Extended";
 
             }
 
-            if(gamepad1.dpad_down){
+            if (gamepad1.dpad_down) {
 
                 rightPiv.setPosition(0);
                 leftPiv.setPosition(1);
+                collCurrentOrientation = "Stowed";
 
             }
 
-            telemetry.addData("Right pivot servo", rightPiv.getPosition());
-            telemetry.addData("Left pivot servo", leftPiv.getPosition());
-            telemetry.update();
+            if (leftColl.getPower() > 0 && rightColl.getPower() > 0) {
+                telemetry.addData("Collection Status: ", intakeCurrentMode);
+            } else if (leftColl.getPower() < 0 && rightColl.getPower() < 0) {
+                telemetry.addData("Collection Status", intakeCurrentMode);
+            } else if (leftColl.getPower() == 0 && rightColl.getPower() == 0) {
+                telemetry.addData("Collection Status", intakeCurrentMode);
+            } else {
+                telemetry.addData("Collection Status", "N/A");
 
+                if (rightPiv.getPosition() > 0.5 && leftPiv.getPosition() < 0.5) {
+                    telemetry.addData("Current Collection Orientation: ", collCurrentOrientation);
+                } else if (rightPiv.getPosition() < 0.5 && leftPiv.getPosition() > 0.5) {
+                    telemetry.addData("Current Collection Orientation: ", collCurrentOrientation);
+                } else {
+                    telemetry.addData("Current Collection Orientation: ", "N/A");
+
+                    telemetry.update();
+
+                }
+
+            }
 
         }
-
     }
-
 }
