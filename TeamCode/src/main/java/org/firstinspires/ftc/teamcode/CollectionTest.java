@@ -32,6 +32,9 @@ public class CollectionTest extends LinearOpMode {
         rightColl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftColl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        rightPiv.setPosition(0);
+        leftPiv.setPosition(1);
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -61,7 +64,7 @@ public class CollectionTest extends LinearOpMode {
 
                 rightPiv.setPosition(1);
                 leftPiv.setPosition(0);
-                collCurrentOrientation = "Extended";
+                collCurrentOrientation = "Deployed";
 
             }
 
@@ -73,27 +76,9 @@ public class CollectionTest extends LinearOpMode {
 
             }
 
-            if (leftColl.getPower() > 0 && rightColl.getPower() > 0) {
-                telemetry.addData("Collection Status: ", intakeCurrentMode);
-            } else if (leftColl.getPower() < 0 && rightColl.getPower() < 0) {
-                telemetry.addData("Collection Status", intakeCurrentMode);
-            } else if (leftColl.getPower() == 0 && rightColl.getPower() == 0) {
-                telemetry.addData("Collection Status", intakeCurrentMode);
-            } else {
-                telemetry.addData("Collection Status", "N/A");
-
-                if (rightPiv.getPosition() > 0.5 && leftPiv.getPosition() < 0.5) {
-                    telemetry.addData("Current Collection Orientation: ", collCurrentOrientation);
-                } else if (rightPiv.getPosition() < 0.5 && leftPiv.getPosition() > 0.5) {
-                    telemetry.addData("Current Collection Orientation: ", collCurrentOrientation);
-                } else {
-                    telemetry.addData("Current Collection Orientation: ", "N/A");
-
-                    telemetry.update();
-
-                }
-
-            }
+            telemetry.addData("Collection Status: ", intakeCurrentMode);
+            telemetry.addData("Current Collection Orientation: ", collCurrentOrientation);
+            telemetry.update();
 
         }
     }
