@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class DriveOp_BETA extends LinearOpMode {
 
-    Gamepad gp1;
-
     DcMotor frontLeft = null;
     DcMotor frontRight = null;
     DcMotor backLeft = null;
@@ -40,16 +38,16 @@ public class DriveOp_BETA extends LinearOpMode {
              * to the motor
              */
 
-            double r = Math.hypot(gp1.left_stick_x, gp1.left_stick_y);
-            double robotAngle = Math.atan2(gp1.left_stick_y, gp1.left_stick_x) - Math.PI / 4;
-            double rightX = gp1.right_stick_x;
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            double rightX = gamepad1.right_stick_x;
             final double v1 = r * Math.cos(robotAngle) + rightX;
             final double v2 = r * Math.sin(robotAngle) - rightX;
             final double v3 = r * Math.sin(robotAngle) + rightX;
             final double v4 = r * Math.cos(robotAngle) - rightX;
 
-            double leftCollPwr = gp1.right_trigger;
-            double rightCollPwr = -gp1.right_trigger;
+            double leftCollPwr = gamepad1.right_trigger;
+            double rightCollPwr = -gamepad1.right_trigger;
 
             /**
              * staging the created power values
@@ -67,11 +65,11 @@ public class DriveOp_BETA extends LinearOpMode {
              * boolean loops for motor/servo control
              */
 
-            if(gp1.dpad_up){
+            if(gamepad1.dpad_up){
                 spool.setPower(1);
             }else{ spool.setPower(0); }
 
-            if(gp1.dpad_down){
+            if(gamepad1.dpad_down){
                 spool.setPower(-1);
             }else{ spool.setPower(0); }
 
