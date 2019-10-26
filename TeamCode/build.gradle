@@ -16,4 +16,5 @@ apply from: '../build.common.gradle'
 
 dependencies{
     implementation 'com.github.dogecv:dogecommander:v1.0.0'
+    implementation 'org.openftc:rev-extensions-2:1.0'
 }
