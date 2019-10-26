@@ -8,3 +8,9 @@ dependencies {
     implementation (name: 'tensorflow-lite-0.0.0-nightly', ext:'aar')
     implementation 'com.github.dogecv:dogecv:2020.2-alpha'
 }
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
