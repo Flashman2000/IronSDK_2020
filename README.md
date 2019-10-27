@@ -18,3 +18,8 @@ The beta branch.... name kinda says it. This is the beta testing branch. Code in
  - `CollectionTest` and `DriveOp_BETA` added for drivetrain testing
  - Installed computer vision system for Skystone
  - added `IronCV_Test` for beta testing the computer vision system
+ 
+### Version 0.4-beta (10/27/2019)
+ - New and improved IronCV computer vision system using a new methodology
+ - Installed RoadRunner and it's dependencies
+ - Installed DogeCommander (will probably be depracated in the future)
