@@ -10,7 +10,6 @@
 Ironclad 8080's programming repository. This repository is constantly being updated with the newest changes from Ironclad's programming team.
 
 ## Special Thanks to:
-- EasyOpenCV and Alex Carter of Disnode Robotics for development on DogeCV
 - Ramazan Ozdemir for being a GOD mentor <img src ="https://i.imgur.com/EZm56V7.jpg" width="2.5%" height="2.5%" class="center">
 - All my reset monkeys <img src="https://i.imgur.com/MeZJyow.png" width="2.5%" height="2.5%" class="center">
 
