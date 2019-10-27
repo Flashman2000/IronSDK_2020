@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -12,6 +13,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvWebcam;
 //import org.openftc.easyopencv.examples.PipelineStageSwitchingExample;
 
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class IronCVDetectorClass {
 
 
     OpenCvCamera phoneCam;
+    OpenCvCamera webcam;
 
 
     public IronCVDetectorClass() {
@@ -60,10 +63,10 @@ public class IronCVDetectorClass {
 
     public void camSetup (HardwareMap hwMap) {
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
-        phoneCam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        phoneCam.openCameraDevice();//open camera
-        phoneCam.setPipeline(new StageSwitchingPipeline());//different stages
-        phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);//display on RC
+        webcam = new OpenCvWebcam(hwMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        webcam.openCameraDevice();
+        webcam.setPipeline(new StageSwitchingPipeline());//different stages
+        webcam.startStreaming(rows, cols, OpenCvCameraRotation.UPRIGHT);//display on RC
     }
 
 
