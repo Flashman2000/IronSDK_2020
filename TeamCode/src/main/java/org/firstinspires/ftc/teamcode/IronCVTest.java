@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class IronCVTest extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
+    private String pos;
 
     IronCVDetectorClass detector = new IronCVDetectorClass(1f/8f, 3f/8f);
 
@@ -25,7 +26,18 @@ public class IronCVTest extends LinearOpMode {
 
             detector.updateVals();
             vals = detector.getVals();
-            telemetry.addData("Values", vals[1]+"   "+vals[0]+"   "+vals[2]);
+
+            if(vals[1] < 200 && vals[0] > 210 && vals[2] > 210){
+                pos = "Left";
+            }else if(vals[1] > 210 && vals[0] < 200 && vals[2] > 210){
+                pos = "Center";
+            }else if(vals[1] > 210 && vals[0] > 210 && vals[2] < 200){
+                pos = "Right";
+            }else{
+                pos = "NOT FOUND";
+            }
+
+            telemetry.addData("Position", pos);
             telemetry.update();
             sleep(100);
 
