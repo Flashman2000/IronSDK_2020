@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksTo
 import android.support.annotation.NonNull;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,12 +14,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.util.AxesSigns;
 import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
+import org.openftc.revextensions2.ExpansionHubServo;
 import org.openftc.revextensions2.RevBulkData;
 
 /*
@@ -29,8 +33,11 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     private ExpansionHubEx hub;
     private ExpansionHubEx hub2;
     private ExpansionHubMotor leftFront, leftRear, rightRear, rightFront;
+    private ExpansionHubServo backL, backR, leftArm, rightArm;
     private List<ExpansionHubMotor> motors;
     private BNO055IMU imu;
+    Orientation angles;
+    Acceleration gravity;
 
     public SampleMecanumDriveREVOptimized(HardwareMap hardwareMap) {
         super();
@@ -43,8 +50,15 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         hub = hardwareMap.get(ExpansionHubEx.class, "hub");
         hub2 = hardwareMap.get(ExpansionHubEx.class, "hub2");
 
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu 1");
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
 
@@ -56,6 +70,11 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         leftRear = hardwareMap.get(ExpansionHubMotor.class, "lb");
         rightRear = hardwareMap.get(ExpansionHubMotor.class, "rb");
         rightFront = hardwareMap.get(ExpansionHubMotor.class, "rf");
+
+        backL = hardwareMap.get(ExpansionHubServo.class, "bl");
+        backR = hardwareMap.get(ExpansionHubServo.class, "br");
+        leftArm = hardwareMap.get(ExpansionHubServo.class, "lcoll");
+        rightArm = hardwareMap.get(ExpansionHubServo.class, "rcoll");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -122,4 +141,21 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     public double getRawExternalHeading() {
         return imu.getAngularOrientation().firstAngle;
     }
+
+    public void setBackServoPos(double lPos, double rPos){
+
+        backL.setPosition(lPos);
+        backR.setPosition(rPos);
+        leftArm.setPosition(0);
+        rightArm.setPosition(0);
+
+    }
+
+    public void setFrontArmServoPos(double lPos, double rPos){
+
+        leftArm.setPosition(lPos);
+        rightArm.setPosition(rPos);
+
+    }
+
 }

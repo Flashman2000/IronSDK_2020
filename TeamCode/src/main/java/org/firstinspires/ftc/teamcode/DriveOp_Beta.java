@@ -11,30 +11,47 @@ import org.opencv.core.Mat;
 @TeleOp(name = "DRIVE")
 public class DriveOp_Beta extends LinearOpMode {
 
-    DcMotor frontLeft  = null;
-    DcMotor frontRight = null;
-    DcMotor backLeft   = null;
-    DcMotor backRight  = null;
-
     @Override
     public void runOpMode(){
 
-        SampleMecanumDriveBase drive = new SampleMecanumDriveREVOptimized(hardwareMap);
+        SampleMecanumDriveREVOptimized drive = new SampleMecanumDriveREVOptimized(hardwareMap);
+
+
 
         waitForStart();
 
         while(opModeIsActive()){
 
-            double r           = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            double robotAngle  = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-            double rightX      = gamepad1.right_stick_x;
+            double r1 = gamepad1.left_stick_x;
+            double r2 = -gamepad1.left_stick_y;
+            double t = gamepad1.right_stick_x;
 
-            final double v1 = r * Math.cos(robotAngle) + rightX;
-            final double v2 = r * Math.sin(robotAngle) - rightX;
-            final double v3 = r * Math.sin(robotAngle) + rightX;
-            final double v4 = r * Math.cos(robotAngle) - rightX;
+            double rfpwr = -r1 + r2 + t;
+            double rbpwr =  r1 + r2 - t;
+            double lfpwr =  r1 + r2 + t;
+            double lbpwr = -r1 + r2 - t;
 
-            drive.setMotorPowers(v1, v3, v4, v2);
+            if(gamepad1.a){
+
+                drive.setBackServoPos(1, 1);
+
+            }
+
+            if(gamepad1.b){
+
+                drive.setBackServoPos(0, 0);
+
+            }
+
+            if(gamepad1.dpad_up){
+                drive.setFrontArmServoPos(1, 1);
+            }
+            if(gamepad1.dpad_down){
+                drive.setFrontArmServoPos(0, 0);
+            }
+
+            drive.setMotorPowers(lfpwr, lbpwr, rbpwr, rfpwr);
+
 
         }
 
