@@ -7,10 +7,10 @@
 </div>
 
 # IronSDK
-The beta branch.... name kinda says it. This is the beta testing branch. Code in here usually isn't fully developed and may or may not be unstable. Beware.
+The **beta** branch.... name kinda says it. This is the beta testing branch. Code in here usually isn't fully developed and may or may not be unstable. Beware.
 
 ## Project Status:
-Developing triple stone autonomous and a new method system
+**Developing triple stone autonomous and a new method system**
 
 ## Changelog:
 
