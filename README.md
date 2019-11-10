@@ -10,7 +10,7 @@
 The beta branch.... name kinda says it. This is the beta testing branch. Code in here usually isn't fully developed and may or may not be unstable. Beware.
 
 ## Project Status:
-**Added computer vision for beta testing**
+Developing triple stone autonomous and a new method system
 
 ## Changelog:
 
@@ -23,3 +23,7 @@ The beta branch.... name kinda says it. This is the beta testing branch. Code in
  - New and improved IronCV computer vision system using a new methodology
  - Installed RoadRunner and it's dependencies
  - Installed DogeCommander (will probably be depracated in the future)
+ 
+ ### Version 1.0 (11/1/2019)
+  - IronCV out of beta testing
+  - Competition ready SDK
