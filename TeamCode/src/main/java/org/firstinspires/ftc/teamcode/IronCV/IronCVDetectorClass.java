@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.IronCV;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -43,7 +43,7 @@ public class IronCVDetectorClass {
 
 
     OpenCvCamera phoneCam;
-    OpenCvCamera webcam;
+    public OpenCvCamera webcam;
 
 
     public IronCVDetectorClass() {
