@@ -15,3 +15,11 @@ Ironclad 8080's programming repository. This repository is constantly being upda
 
 ## Project Status:
 First version of our compeition ready SDK. Future improvements will be made.
+
+## Changelog:
+ 
+ ### Version 1.0 (11/1/2019)
+  - IronCV fully developed and competition ready
+  - 15 point auto
+  
+
