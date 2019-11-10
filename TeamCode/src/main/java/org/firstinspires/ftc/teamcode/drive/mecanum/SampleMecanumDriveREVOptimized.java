@@ -94,6 +94,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         // TODO: set the tuned coefficients from DriveVelocityPIDTuner if using RUN_USING_ENCODER
         // setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, ...);
 
+        PIDCoefficients coeffs = new PIDCoefficients(9, 0.5, 7);
+
+        setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, coeffs);
+
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
     }
