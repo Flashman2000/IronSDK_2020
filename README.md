@@ -14,4 +14,4 @@ Ironclad 8080's programming repository. This repository is constantly being upda
 - All my reset monkeys <img src="https://i.imgur.com/MeZJyow.png" width="2.5%" height="2.5%" class="center">
 
 ## Project Status:
-**CURRENTLY IN VERSION 0. Awaiting first push from beta**
+First version of our compeition ready SDK. Future improvements will be made.
