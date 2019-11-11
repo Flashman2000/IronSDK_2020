@@ -128,6 +128,15 @@ public class Monmon extends Monmon_Config{
         }
     }
 
+    public void fwdWithTime(double pwr, long time, LinearOpMode opmode){
+        LF.setPower(pwr);
+        LB.setPower(pwr);
+        RF.setPower(pwr);
+        RB.setPower(pwr);
+        opmode.sleep(time);
+        killAll();
+    }
+
     public void bckWithEncoder(double pwr, int pulses, LinearOpMode opmode){
         while(LF.getCurrentPosition() > -pulses && opmode.opModeIsActive()){
             LF.setPower(-pwr);
@@ -135,6 +144,15 @@ public class Monmon extends Monmon_Config{
             RF.setPower(-pwr);
             RB.setPower(-pwr);
         }
+    }
+
+    public void bckWithTime(double pwr, long time, LinearOpMode opmode){
+        LF.setPower(-pwr);
+        LB.setPower(-pwr);
+        RF.setPower(-pwr);
+        RB.setPower(-pwr);
+        opmode.sleep(time);
+        killAll();
     }
 
     public void strafeLeftWithEnc(double pwr, int pulses, LinearOpMode opmode){
@@ -175,14 +193,14 @@ public class Monmon extends Monmon_Config{
 
     public void diagLeftWithEnc(double fwdpwr, double lftpwr, int pulses, LinearOpMode opmode){
         if(fwdpwr > 0) {
-            while (LF.getCurrentPosition() < pulses && opmode.opModeIsActive()) {
+            while (LF.getCurrentPosition() > -pulses && opmode.opModeIsActive()) {
                 LF.setPower(-lftpwr);
                 LB.setPower(fwdpwr);
                 RF.setPower(fwdpwr);
                 RB.setPower(-lftpwr);
             }
         }else{
-            while (LF.getCurrentPosition() > pulses && opmode.opModeIsActive()) {
+            while (LF.getCurrentPosition() < -pulses && opmode.opModeIsActive()) {
                 LF.setPower(-lftpwr);
                 LB.setPower(fwdpwr);
                 RF.setPower(fwdpwr);
