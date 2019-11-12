@@ -33,9 +33,9 @@ import org.openftc.revextensions2.RevBulkData;
 public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     private ExpansionHubEx hub;
     private ExpansionHubEx hub2;
-    private ExpansionHubMotor leftFront, leftRear, rightRear, rightFront;
+    private ExpansionHubMotor LF, LB, RB, RF;
     private ExpansionHubServo backL, backR, leftArm, rightArm;
-    private List<ExpansionHubMotor> motors;
+    private List<ExpansionHubMotor> driveMotors;
     private BNO055IMU imu;
     Orientation angles;
     Acceleration gravity;
@@ -74,19 +74,19 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         // upward (normal to the floor) using a command like the following:
         //BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
-        leftFront = hardwareMap.get(ExpansionHubMotor.class, "lf");
-        leftRear = hardwareMap.get(ExpansionHubMotor.class, "lb");
-        rightRear = hardwareMap.get(ExpansionHubMotor.class, "rb");
-        rightFront = hardwareMap.get(ExpansionHubMotor.class, "rf");
+        LF = hardwareMap.get(ExpansionHubMotor.class, "lf");
+        LB = hardwareMap.get(ExpansionHubMotor.class, "lb");
+        RB = hardwareMap.get(ExpansionHubMotor.class, "rb");
+        RF = hardwareMap.get(ExpansionHubMotor.class, "rf");
 
         backL = hardwareMap.get(ExpansionHubServo.class, "bl");
         backR = hardwareMap.get(ExpansionHubServo.class, "br");
         leftArm = hardwareMap.get(ExpansionHubServo.class, "lcoll");
         rightArm = hardwareMap.get(ExpansionHubServo.class, "rcoll");
 
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        driveMotors = Arrays.asList(LF, LB, RB, RF);
 
-        for (ExpansionHubMotor motor : motors) {
+        for (ExpansionHubMotor motor : driveMotors) {
             // TODO: decide whether or not to use the built-in velocity PID
             // if you keep it, then don't tune kStatic or kA
             // otherwise, comment out the following line
@@ -97,8 +97,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         // TODO: reverse any motors using DcMotor.setDirection()
 
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        LF.setDirection(DcMotorSimple.Direction.REVERSE);
+        RB.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: set the tuned coefficients from DriveVelocityPIDTuner if using RUN_USING_ENCODER
         // setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, ...);
@@ -111,13 +111,13 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
     @Override
     public PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode) {
-        PIDFCoefficients coefficients = leftFront.getPIDFCoefficients(runMode);
+        PIDFCoefficients coefficients = LF.getPIDFCoefficients(runMode);
         return new PIDCoefficients(coefficients.p, coefficients.i, coefficients.d);
     }
 
     @Override
     public void setPIDCoefficients(DcMotor.RunMode runMode, PIDCoefficients coefficients) {
-        for (ExpansionHubMotor motor : motors) {
+        for (ExpansionHubMotor motor : driveMotors) {
             motor.setPIDFCoefficients(runMode, new PIDFCoefficients(
                     coefficients.kP, coefficients.kI, coefficients.kD, 1
             ));
@@ -134,7 +134,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
 
         List<Double> wheelPositions = new ArrayList<>();
-        for (ExpansionHubMotor motor : motors) {
+        for (ExpansionHubMotor motor : driveMotors) {
             wheelPositions.add(encoderTicksToInches(bulkData.getMotorCurrentPosition(motor)));
         }
         return wheelPositions;
@@ -142,10 +142,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        LF.setPower(v);
+        LB.setPower(v1);
+        RB.setPower(v2);
+        RF.setPower(v3);
     }
 
     @Override
