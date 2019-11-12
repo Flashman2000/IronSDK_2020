@@ -20,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.util.AxesSigns;
 import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.util.LynxOptimizedI2cFactory;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.ExpansionHubServo;
@@ -50,6 +51,12 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         hub = hardwareMap.get(ExpansionHubEx.class, "hub");
         hub2 = hardwareMap.get(ExpansionHubEx.class, "hub2");
 
+        imu = LynxOptimizedI2cFactory.createLynxEmbeddedImu(hub2.getStandardModule(), 0);
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(parameters);
+
+        /**
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -61,10 +68,11 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         imu = hardwareMap.get(BNO055IMU.class, "imu 1");
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
+         */
 
         // TODO: if your hub is mounted vertically, remap the IMU axes so that the z-axis points
         // upward (normal to the floor) using a command like the following:
-        BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
+        //BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
         leftFront = hardwareMap.get(ExpansionHubMotor.class, "lf");
         leftRear = hardwareMap.get(ExpansionHubMotor.class, "lb");
@@ -82,6 +90,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             // TODO: decide whether or not to use the built-in velocity PID
             // if you keep it, then don't tune kStatic or kA
             // otherwise, comment out the following line
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
@@ -94,9 +103,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         // TODO: set the tuned coefficients from DriveVelocityPIDTuner if using RUN_USING_ENCODER
         // setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, ...);
 
-        PIDCoefficients coeffs = new PIDCoefficients(9, 0.5, 7);
-
-        setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, coeffs);
+        setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDCoefficients(20,5,2));
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));

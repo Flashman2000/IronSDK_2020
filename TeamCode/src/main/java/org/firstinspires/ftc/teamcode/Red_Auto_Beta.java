@@ -56,7 +56,7 @@ public class Red_Auto_Beta extends LinearOpMode {
             sleep(800);
             robot.strafeLeftWithEnc(0.6, 450, this);
             robot.resetEncoders();
-            robot.bckWithEncoder(0.6, 4200, this);
+            robot.bckWithEncoder(0.6, 4600, this);
             robot.killAll();
             robot.resetEncoders();
             robot.releaseFront();
@@ -64,6 +64,25 @@ public class Red_Auto_Beta extends LinearOpMode {
             robot.fwdWithEncoder(0.6, 400, this);
             robot.killAll();
             robot.resetEncoders();
+
+        }
+
+        if(SkystoneLocation == "Center"){
+            robot.diagLeftWithEnc(-0.6, -0.45, -1100, this);
+            robot.resetEncoders();
+            robot.strafeRightWithEnc(0.6, 550, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.grabFront();
+            sleep(800);
+            robot.strafeLeftWithEnc(0.6, 550, this);
+            robot.resetEncoders();
+            robot.bckWithEncoder(0.6, 3300, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.releaseFront();
+            sleep(500);
+            robot.fwdWithEncoder(0.6, 4200, this);
 
         }
 
