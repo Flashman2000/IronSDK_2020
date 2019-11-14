@@ -230,4 +230,38 @@ public class Monmon extends Monmon_Config{
         backYk.setPosition(0.2);
     }
 
+    public void selfCorrect(){
+
+        killAll();
+
+        if(imu.getAngularOrientation().firstAngle != 0) {
+            if (imu.getAngularOrientation().firstAngle > 0) {
+
+                while (imu.getAngularOrientation().firstAngle >= 0) {
+                    RF.setPower(0.25);
+                    RB.setPower(-0.25);
+                    LF.setPower(0.25);
+                    LB.setPower(-0.25);
+                }
+
+                killAll();
+                resetEncoders();
+
+            } else if (imu.getAngularOrientation().firstAngle < 0) {
+
+                while (imu.getAngularOrientation().firstAngle <= 0) {
+                    RF.setPower(-0.25);
+                    RB.setPower(0.25);
+                    LF.setPower(-0.25);
+                    LB.setPower(0.25);
+                }
+
+                killAll();
+                resetEncoders();
+
+            }
+        }
+
+    }
+
 }
