@@ -33,8 +33,8 @@ import org.openftc.revextensions2.RevBulkData;
 public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     private ExpansionHubEx hub;
     private ExpansionHubEx hub2;
-    private ExpansionHubMotor LF, LB, RB, RF;
-    private ExpansionHubServo backL, backR, leftArm, rightArm;
+    public ExpansionHubMotor LF, LB, RB, RF;
+    public ExpansionHubServo backL, backR, leftArm, rightArm;
     private List<ExpansionHubMotor> driveMotors;
     private BNO055IMU imu;
     Orientation angles;
