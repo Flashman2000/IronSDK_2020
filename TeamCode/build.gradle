@@ -7,14 +7,30 @@
 // the build definitions, you can place those customizations in this file, but
 // please think carefully as to whether such customizations are really necessary
 // before doing so.
-
-
 // Custom definitions may go here
-
 // Include common definitions from above.
 apply from: '../build.common.gradle'
-
 dependencies {
-    implementation 'org.openftc:rev-extensions-2:1.2'
+    /*
+     * Other Modules
+     */
+    implementation project(':FtcRobotController')
+
+    turboImplementation project(':Hardware')
+    turboImplementation project(':RobotCore')
+    turboImplementation project(':FtcCommon')
+
+    extremeTurboImplementation project(':Hardware')
+    extremeTurboImplementation project(':RobotCore')
+    extremeTurboImplementation project(':FtcCommon')
+
+    //implementation 'com.github.dogecv:dogecv:2020.4-alpha'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.9'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9'
     implementation 'org.openftc:easyopencv:1.2'
+    implementation 'com.acmerobotics.roadrunner:core:0.4.6'
+    implementation 'com.acmerobotics.dashboard:dashboard:0.3.4'
+    implementation 'org.openftc:rev-extensions-2:1.2'
+
 }

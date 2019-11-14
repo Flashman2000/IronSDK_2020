@@ -3,7 +3,7 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.qualcomm.ftcrobotcontroller"
           android:versionCode="35"
-          android:versionName="5.3">
+          android:versionName="@string/version_name_for_manifest">
 
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -24,7 +24,8 @@
               android:screenOrientation="fullUser"
               android:configChanges="orientation|screenSize"
               android:label="@string/app_name"
-              android:launchMode="singleTask" >
+              android:launchMode="singleTask"
+              android:theme="@style/SplashTheme">
 
       <intent-filter>
         <category android:name="android.intent.category.LAUNCHER" />

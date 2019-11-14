@@ -102,10 +102,11 @@ android {
     }
 }
 
+apply from: '../moduleFlavors.gradle'
+
 repositories {
     flatDir {
         dirs rootProject.file('libs')
     }
-    jcenter()
 }
-apply from: 'build.release.gradle'
+//apply from: 'build.release.gradle'
