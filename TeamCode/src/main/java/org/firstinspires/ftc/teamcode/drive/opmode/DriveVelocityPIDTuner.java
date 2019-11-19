@@ -22,9 +22,9 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 
 /*
@@ -49,7 +49,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
     private String catName;
     private CustomVariable catVar;
 
-    private SampleMecanumDriveREVOptimized drive;
+    private SampleMecanumDriveBase drive;
 
     private static MotionProfile generateProfile(boolean movingForward) {
         MotionState start = new MotionState(movingForward ? 0 : DISTANCE, 0, 0, 0);
@@ -127,11 +127,6 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        if (!RUN_USING_ENCODER) {
-            RobotLog.setGlobalErrorMsg("%s does not need to be run if the built-in motor velocity" +
-                    "PID is not in use", getClass().getSimpleName());
-        }
-
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
         drive = new SampleMecanumDriveREVOptimized(hardwareMap);
@@ -140,7 +135,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
         NanoClock clock = NanoClock.system();
 
-        telemetry.addLine("Ready!");
+        telemetry.log().add("Ready!");
         telemetry.update();
         telemetry.clearAll();
 
@@ -152,10 +147,14 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
         MotionProfile activeProfile = generateProfile(true);
         double profileStart = clock.seconds();
 
+        List<Double> lastWheelPositions = null;
+        double lastTimestamp = 0;
 
         while (!isStopRequested()) {
             // calculate and set the motor power
             double profileTime = clock.seconds() - profileStart;
+            double dt = profileTime - lastTimestamp;
+            lastTimestamp = profileTime;
 
             if (profileTime > activeProfile.duration()) {
                 // generate a new profile
@@ -168,15 +167,23 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
             double targetPower = kV * motionState.getV();
             drive.setDrivePower(new Pose2d(targetPower, 0, 0));
 
-            List<Double> velocities = drive.getWheelVelocities();
+            List<Double> wheelPositions = drive.getWheelPositions();
+            if (lastWheelPositions != null) {
+                // compute velocities
+                List<Double> syntheticVelocities = new ArrayList<>();
+                for (int i = 0; i < wheelPositions.size(); i++) {
+                    syntheticVelocities.add((wheelPositions.get(i) - lastWheelPositions.get(i)) / dt);
+                }
 
-            // update telemetry
-            telemetry.addData("targetVelocity", motionState.getV());
-            for (int i = 0; i < velocities.size(); i++) {
-                telemetry.addData("velocity" + i, velocities.get(i));
-                telemetry.addData("error" + i, motionState.getV() - velocities.get(i));
+                // update telemetry
+                telemetry.addData("targetVelocity", motionState.getV());
+                for (int i = 0; i < syntheticVelocities.size(); i++) {
+                    telemetry.addData("velocity" + i, syntheticVelocities.get(i));
+                    telemetry.addData("error" + i, motionState.getV() - syntheticVelocities.get(i));
+                }
+                telemetry.update();
             }
-            telemetry.update();
+            lastWheelPositions = wheelPositions;
         }
 
         removePidVariable();

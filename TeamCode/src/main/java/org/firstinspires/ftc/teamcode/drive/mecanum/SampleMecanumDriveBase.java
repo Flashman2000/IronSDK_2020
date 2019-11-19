@@ -26,12 +26,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
 import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.teamcode.IronCV.IronCVDetectorClass;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /*
  * Base class with shared functionality for sample mecanum drives. All hardware-specific details are
@@ -61,17 +56,10 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
     private DriveConstraints constraints;
     private TrajectoryFollower follower;
 
-    private List<Double> lastWheelPositions;
-    private double lastTimestamp;
-
-    public IronCVDetectorClass detector = new IronCVDetectorClass(-8f/8f, -3f/8f);
-
     public SampleMecanumDriveBase() {
         super(kV, kA, kStatic, TRACK_WIDTH);
 
         dashboard = FtcDashboard.getInstance();
-        dashboard.setTelemetryTransmissionInterval(25);
-
         clock = NanoClock.system();
 
         mode = Mode.IDLE;
@@ -149,14 +137,12 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
         switch (mode) {
             case IDLE:
                 // do nothing
+                setDriveSignal(new DriveSignal());
                 break;
             case TURN: {
                 double t = clock.seconds() - turnStart;
 
                 MotionState targetState = turnProfile.get(t);
-
-                turnController.setTargetPosition(targetState.getX());
-
                 double targetOmega = targetState.getV();
                 double targetAlpha = targetState.getA();
                 double correction = turnController.update(currentPose.getHeading(), targetOmega);
@@ -210,28 +196,6 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
 
     public boolean isBusy() {
         return mode != Mode.IDLE;
-    }
-
-    public List<Double> getWheelVelocities() {
-        List<Double> positions = getWheelPositions();
-        double currentTimestamp = clock.seconds();
-
-        List<Double> velocities = new ArrayList<>(positions.size());;
-        if (lastWheelPositions != null) {
-            double dt = currentTimestamp - lastTimestamp;
-            for (int i = 0; i < positions.size(); i++) {
-                velocities.add((positions.get(i) - lastWheelPositions.get(i)) / dt);
-            }
-        } else {
-            for (int i = 0; i < positions.size(); i++) {
-                velocities.add(0.0);
-            }
-        }
-
-        lastTimestamp = currentTimestamp;
-        lastWheelPositions = positions;
-
-        return velocities;
     }
 
     public abstract PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode);

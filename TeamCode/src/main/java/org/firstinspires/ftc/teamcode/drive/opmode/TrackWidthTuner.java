@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -27,28 +25,25 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
 @Config
 @Autonomous(group = "drive")
 public class TrackWidthTuner extends LinearOpMode {
-    public static double ANGLE = 180; // deg
+    public static double ANGLE = Math.toRadians(180);
     public static int NUM_TRIALS = 5;
-    public static int DELAY = 1000; // ms
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
-        SampleMecanumDriveREVOptimized drive = new SampleMecanumDriveREVOptimized(hardwareMap);
+        SampleMecanumDriveBase drive = new SampleMecanumDriveREVOptimized(hardwareMap);
         // TODO: if you haven't already, set the localizer to something that doesn't depend on
         // drive encoders for computing the heading
 
-        telemetry.addLine("Press play to begin the track width tuner routine");
-        telemetry.addLine("Make sure your robot has enough clearance to turn smoothly");
+        telemetry.log().add("Press play to begin the track width tuner routine");
+        telemetry.log().add("Make sure your robot has enough clearance to turn smoothly");
         telemetry.update();
 
         waitForStart();
 
         if (isStopRequested()) return;
 
-        telemetry.clearAll();
-        telemetry.addLine("Running...");
+        telemetry.log().clear();
+        telemetry.log().add("Running...");
         telemetry.update();
 
         MovingStatistics trackWidthStats = new MovingStatistics(NUM_TRIALS);
@@ -59,7 +54,7 @@ public class TrackWidthTuner extends LinearOpMode {
             double headingAccumulator = 0;
             double lastHeading = 0;
 
-            drive.turn(Math.toRadians(ANGLE));
+            drive.turn(ANGLE);
 
             while (!isStopRequested() && drive.isBusy()) {
                 double heading = drive.getPoseEstimate().getHeading();
@@ -69,15 +64,15 @@ public class TrackWidthTuner extends LinearOpMode {
                 drive.update();
             }
 
-            double trackWidth = DriveConstants.TRACK_WIDTH * Math.toRadians(ANGLE) / headingAccumulator;
+            double trackWidth = DriveConstants.TRACK_WIDTH * ANGLE / headingAccumulator;
             trackWidthStats.add(trackWidth);
 
-            sleep(DELAY);
+            sleep(1000);
         }
 
-        telemetry.clearAll();
-        telemetry.addLine("Tuning complete");
-        telemetry.addLine(Misc.formatInvariant("Effective track width = %.2f (SE = %.3f)",
+        telemetry.log().clear();
+        telemetry.log().add("Tuning complete");
+        telemetry.log().add(Misc.formatInvariant("Effective track width = %.2f (SE = %.3f)",
                 trackWidthStats.getMean(),
                 trackWidthStats.getStandardDeviation() / Math.sqrt(NUM_TRIALS)));
         telemetry.update();

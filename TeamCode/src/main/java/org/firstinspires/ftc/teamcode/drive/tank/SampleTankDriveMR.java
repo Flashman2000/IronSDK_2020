@@ -12,8 +12,6 @@ import com.qualcomm.robotcore.util.DifferentialControlLoopCoefficients;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksToInches;
 /*
  * Simple tank drive hardware implementation for Modern Robotics hardware.
@@ -56,17 +54,17 @@ public class SampleTankDriveMR extends SampleTankDriveBase {
         rightMotors = Arrays.asList(rightFront, rightRear);
 
         for (DcMotor motor : motors) {
-            if (RUN_USING_ENCODER) {
-                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
+            // TODO: decide whether or not to use the built-in velocity PID
+            // if you keep it, then don't tune kStatic or kA
+            // otherwise, comment out the following line
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
-        if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
-            setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
-        }
-
         // TODO: reverse any motors using DcMotor.setDirection()
+
+        // TODO: set the tuned coefficients from DriveVelocityPIDTuner if using RUN_USING_ENCODER
+        // setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, ...);
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
