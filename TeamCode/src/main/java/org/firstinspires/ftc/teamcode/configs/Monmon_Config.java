@@ -33,11 +33,15 @@ public class Monmon_Config {
 
     public Orientation angles;
 
-    public IronCVDetectorClass detector = new IronCVDetectorClass(-8f/8f, -3f/8f);
+    public IronCVDetectorClass detector = new IronCVDetectorClass();
 
     public String pos;
 
     public double i;
+
+    public double correction;
+
+    public final double GAIN = 0.01;
 
     public int[] vals;
 

@@ -176,15 +176,14 @@ public class Monmon extends Monmon_Config{
         }
 
         if(gamepad1.right_bumper){
-
             lColl.setPower(-0.7);
             rColl.setPower(0.7);
-
         }
 
         if(gamepad1.left_bumper){
             lColl.setPower(0);
             rColl.setPower(0);
+            spacer.setPosition(0.35);
         }
 
         if(gamepad1.left_trigger > 0){
@@ -272,10 +271,11 @@ public class Monmon extends Monmon_Config{
 
     public void fwdWithEncoder(double pwr, int pulses, LinearOpMode opmode){
         while(LF.getCurrentPosition() < pulses && opmode.opModeIsActive()){
-            LF.setPower(pwr);
-            LB.setPower(pwr);
-            RF.setPower(pwr);
-            RB.setPower(pwr);
+            correction = checkDirection(GAIN);
+            LF.setPower(pwr - correction);
+            LB.setPower(pwr + correction);
+            RF.setPower(pwr - correction);
+            RB.setPower(pwr + correction);
         }
     }
 
@@ -413,6 +413,24 @@ public class Monmon extends Monmon_Config{
             }
         }
 
+    }
+
+    public double checkDirection(double adj) {
+        // The gain value determines how sensitive the correction is to direction changes.
+        // You will have to experiment with your robot to get small smooth direction changes
+        // to stay on a straight line.
+        double correction, angle, gain = adj;
+
+        angle = imu.getAngularOrientation().firstAngle;
+
+        if (angle == 0)
+            correction = 0;             // no adjustment.
+        else
+            correction = -angle;        // reverse sign of angle for correction.
+
+        correction = correction * gain;
+
+        return correction;
     }
 
 }
