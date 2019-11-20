@@ -27,6 +27,8 @@ public class Monmon_Config {
     public Servo frontYk = null;
     public Servo backYk = null;
 
+    public Servo spacer = null;
+
     public BNO055IMU imu;
 
     public Orientation angles;
@@ -34,6 +36,8 @@ public class Monmon_Config {
     public IronCVDetectorClass detector = new IronCVDetectorClass(-8f/8f, -3f/8f);
 
     public String pos;
+
+    public double i;
 
     public int[] vals;
 
