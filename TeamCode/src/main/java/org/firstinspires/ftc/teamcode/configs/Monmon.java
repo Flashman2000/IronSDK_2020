@@ -455,7 +455,7 @@ public class Monmon extends Monmon_Config{
 
     public void turnLeft180(){
         boolean positive = true;
-        while (imu.getAngularOrientation().firstAngle != 180 || positive){
+        while (imu.getAngularOrientation().firstAngle != 180 && positive){
 
             if(imu.getAngularOrientation().firstAngle >= -180 && imu.getAngularOrientation().firstAngle < 0){
                 positive = false;
