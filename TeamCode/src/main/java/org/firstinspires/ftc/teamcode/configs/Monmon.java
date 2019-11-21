@@ -81,11 +81,13 @@ public class Monmon extends Monmon_Config{
         telemetry.addLine("Ready");
         telemetry.update();
 
-        while(!opmode.isStarted()){
-            String loc = detectSkystone();
+        if(camEnable) {
+            while (!opmode.isStarted()) {
+                String loc = detectSkystone();
 
-            telemetry.addData("Position", loc);
-            telemetry.update();
+                telemetry.addData("Position", loc);
+                telemetry.update();
+            }
         }
 
     }
@@ -427,7 +429,7 @@ public class Monmon extends Monmon_Config{
     }
 
     public void turnLeftGyro(double target, LinearOpMode opmode){
-        
+
         while(imu.getAngularOrientation().firstAngle < target && opmode.opModeIsActive()) {
             double pwr = Range.clip(target - imu.getAngularOrientation().firstAngle/target, 0.3, 1);
             LF.setPower(-pwr);
@@ -448,6 +450,22 @@ public class Monmon extends Monmon_Config{
             RB.setPower(-pwr);
         }
         killAll();
+
+    }
+
+    public void turnLeft180(){
+        boolean positive = true;
+        while (imu.getAngularOrientation().firstAngle != 180 || positive){
+
+            if(imu.getAngularOrientation().firstAngle >= -180 && imu.getAngularOrientation().firstAngle < 0){
+                positive = false;
+            }
+
+            LF.setPower(-1);
+            LB.setPower(1);
+            RF.setPower(-1);
+            RB.setPower(1);
+        }
 
     }
 
