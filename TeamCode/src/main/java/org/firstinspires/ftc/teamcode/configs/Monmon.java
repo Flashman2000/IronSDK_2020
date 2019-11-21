@@ -466,6 +466,7 @@ public class Monmon extends Monmon_Config{
             RF.setPower(-1);
             RB.setPower(1);
         }
+        killAll();
 
     }
 
