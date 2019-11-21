@@ -431,7 +431,8 @@ public class Monmon extends Monmon_Config{
     public void turnLeftGyro(double target, LinearOpMode opmode){
 
         while(imu.getAngularOrientation().firstAngle < target && opmode.opModeIsActive()) {
-            double pwr = Range.clip(target - imu.getAngularOrientation().firstAngle/target, 0.3, 1);
+            double pwrcalc = Math.pow(target, 2) - Math.pow(imu.getAngularOrientation().firstAngle, 2) / Math.pow(target, 2);
+            double pwr = Range.clip(pwrcalc, 0.3, 1);
             LF.setPower(-pwr);
             LB.setPower(pwr);
             RF.setPower(-pwr);
@@ -443,7 +444,8 @@ public class Monmon extends Monmon_Config{
     public void turnRightGyro(double target, LinearOpMode opmode){
 
         while(imu.getAngularOrientation().firstAngle > -target && opmode.opModeIsActive()) {
-            double pwr = Range.clip(-target + imu.getAngularOrientation().firstAngle/-target, 0.3, 1);
+            double pwrcalc = -Math.pow(target, 2) + Math.pow(imu.getAngularOrientation().firstAngle, 2) / -Math.pow(target, 2);
+            double pwr = Range.clip(pwrcalc, 0.3, 1);
             LF.setPower(pwr);
             LB.setPower(-pwr);
             RF.setPower(pwr);
@@ -453,9 +455,9 @@ public class Monmon extends Monmon_Config{
 
     }
 
-    public void turnLeft180(){
+    public void turnLeft180(LinearOpMode opmode){
         boolean positive = true;
-        while (imu.getAngularOrientation().firstAngle != 180 && positive){
+        while (imu.getAngularOrientation().firstAngle != 180 && positive && opmode.opModeIsActive()){
 
             if(imu.getAngularOrientation().firstAngle >= -180 && imu.getAngularOrientation().firstAngle < 0){
                 positive = false;

@@ -19,7 +19,7 @@ public class turnTest extends LinearOpMode {
 
         sleep(2500);
 
-        robot.turnLeft180();
+        robot.turnLeft180(this);
 
     }
 
