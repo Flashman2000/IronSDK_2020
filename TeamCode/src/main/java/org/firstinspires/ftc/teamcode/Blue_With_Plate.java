@@ -2,10 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.firstinspires.ftc.teamcode.configs.Monmon;
 
 @Autonomous(name = "Test Blue")
-public class Blue_Auto extends LinearOpMode {
+public class Blue_With_Plate extends LinearOpMode {
 
     Monmon robot = new Monmon();
     String SkystoneLocation;
@@ -59,12 +60,8 @@ public class Blue_Auto extends LinearOpMode {
             robot.resetEncoders();
             robot.releaseBack();
             sleep(500);
-            robot.bckWithEncoder(1, 800, this);
-            robot.killAll();
-            robot.resetEncoders();
-            robot.leftArm.setPosition(1);
-            robot.rightArm.setPosition(0);
-            sleep(2000);
+            robot.fwdWithEncoder(0.6, 2198, this);
+            robot.turnLeftGyro(90, this);
 
         }
 
@@ -159,3 +156,4 @@ public class Blue_Auto extends LinearOpMode {
 
     }
 }
+

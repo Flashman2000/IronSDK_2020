@@ -13,7 +13,7 @@ public class Gain_Test extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        robot.initAuto(hardwareMap, telemetry);
+        robot.initAuto(hardwareMap, telemetry, this, false);
 
         waitForStart();
 

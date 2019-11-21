@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -18,7 +19,7 @@ public class Monmon extends Monmon_Config{
 
     public Monmon(){ }
 
-    public void initAuto(HardwareMap hardwareMap, Telemetry telemetry){
+    public void initAuto(HardwareMap hardwareMap, Telemetry telemetry, LinearOpMode opmode, boolean camEnable){
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -73,12 +74,19 @@ public class Monmon extends Monmon_Config{
         RF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         RB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        detector.camSetup(hardwareMap);
+        if(camEnable){detector.camSetup(hardwareMap);}
 
         angles  = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         telemetry.addLine("Ready");
         telemetry.update();
+
+        while(!opmode.isStarted()){
+            String loc = detectSkystone();
+
+            telemetry.addData("Position", loc);
+            telemetry.update();
+        }
 
     }
 
@@ -256,6 +264,10 @@ public class Monmon extends Monmon_Config{
 
     }
 
+    public void closePipeline(){
+        detector.webcam.stopStreaming();
+    }
+
     public void killAll(){
         RF.setPower(0);
         RB.setPower(0);
@@ -396,40 +408,6 @@ public class Monmon extends Monmon_Config{
         backYk.setPosition(0.2);
     }
 
-    public void selfCorrect(){
-
-        killAll();
-
-        if(imu.getAngularOrientation().firstAngle != 0) {
-            if (imu.getAngularOrientation().firstAngle > 0) {
-
-                while (imu.getAngularOrientation().firstAngle >= 0) {
-                    RF.setPower(0.25);
-                    RB.setPower(-0.25);
-                    LF.setPower(0.25);
-                    LB.setPower(-0.25);
-                }
-
-                killAll();
-                resetEncoders();
-
-            } else if (imu.getAngularOrientation().firstAngle < 0) {
-
-                while (imu.getAngularOrientation().firstAngle <= 0) {
-                    RF.setPower(-0.25);
-                    RB.setPower(0.25);
-                    LF.setPower(-0.25);
-                    LB.setPower(0.25);
-                }
-
-                killAll();
-                resetEncoders();
-
-            }
-        }
-
-    }
-
     public double checkDirection(double adj) {
         // The gain value determines how sensitive the correction is to direction changes.
         // You will have to experiment with your robot to get small smooth direction changes
@@ -446,6 +424,53 @@ public class Monmon extends Monmon_Config{
         correction = correction * gain;
 
         return correction;
+    }
+
+    public void turnLeftGyro(double target, LinearOpMode opmode){
+        
+        while(imu.getAngularOrientation().firstAngle < target && opmode.opModeIsActive()) {
+            double pwr = Range.clip(target - imu.getAngularOrientation().firstAngle/target, 0.3, 1);
+            LF.setPower(-pwr);
+            LB.setPower(pwr);
+            RF.setPower(-pwr);
+            RB.setPower(pwr);
+        }
+        killAll();
+    }
+
+    public void turnRightGyro(double target, LinearOpMode opmode){
+
+        while(imu.getAngularOrientation().firstAngle > -target && opmode.opModeIsActive()) {
+            double pwr = Range.clip(-target + imu.getAngularOrientation().firstAngle/-target, 0.3, 1);
+            LF.setPower(pwr);
+            LB.setPower(-pwr);
+            RF.setPower(pwr);
+            RB.setPower(-pwr);
+        }
+        killAll();
+
+    }
+
+    public void reOrient(LinearOpMode opmode){
+        if(imu.getAngularOrientation().firstAngle > 0){
+            while(imu.getAngularOrientation().firstAngle > 0 && opmode.opModeIsActive()) {
+                double pwr = Range.clip(Math.abs(0.011*imu.getAngularOrientation().firstAngle), 0.3, 1);
+                LF.setPower(pwr);
+                LB.setPower(-pwr);
+                RF.setPower(pwr);
+                RB.setPower(-pwr);
+            }
+            killAll();
+        }else if(imu.getAngularOrientation().firstAngle < 0){
+            while(imu.getAngularOrientation().firstAngle < 0 && opmode.opModeIsActive()) {
+                double pwr = Range.clip(Math.abs(0.011*imu.getAngularOrientation().firstAngle), 0.3, 1);
+                LF.setPower(-pwr);
+                LB.setPower(pwr);
+                RF.setPower(-pwr);
+                RB.setPower(pwr);
+            }
+            killAll();
+        }
     }
 
 }

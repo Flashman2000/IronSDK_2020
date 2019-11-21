@@ -14,7 +14,7 @@ public class Red_Auto extends LinearOpMode {
     @Override
     public void runOpMode(){
 
-        robot.initAuto(hardwareMap, telemetry);
+        robot.initAuto(hardwareMap, telemetry, this, true);
 
         //robot.rightArm.setPosition(0.4);
 
@@ -29,6 +29,8 @@ public class Red_Auto extends LinearOpMode {
 
         telemetry.addData("Position", SkystoneLocation);
         telemetry.update();
+
+        robot.closePipeline(); //avoid RAM leakage
 
         if(SkystoneLocation == "Left" || SkystoneLocation == "NOT FOUND"){
 
@@ -150,7 +152,6 @@ public class Red_Auto extends LinearOpMode {
             robot.resetEncoders();
             robot.bckWithEncoder(1, 1000, this);
             robot.bckWithEncoder(1, 3500, this);
-            robot.selfCorrect();
             telemetry.addData("Fourth heading", robot.imu.getAngularOrientation().firstAngle);
             telemetry.update();
             robot.killAll();
