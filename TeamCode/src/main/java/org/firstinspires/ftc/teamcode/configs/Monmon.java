@@ -112,6 +112,9 @@ public class Monmon extends Monmon_Config{
         turner = hardwareMap.get(Servo.class, "turn");
         spacer = hardwareMap.get(Servo.class, "spacer");
 
+        frontYk = hardwareMap.get(Servo.class, "frntyk");
+        backYk = hardwareMap.get(Servo.class, "bckyk");
+
 
         LF.setDirection(DcMotorSimple.Direction.REVERSE);
         RB.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -129,6 +132,9 @@ public class Monmon extends Monmon_Config{
     }
 
     public void teleActivity(Gamepad gamepad1, Gamepad gamepad2){
+        releaseBack();
+        releaseFront();
+
         double r1 = gamepad1.left_stick_x;
         double r2 = -gamepad1.left_stick_y;
         double t = gamepad1.right_stick_x;
@@ -187,8 +193,8 @@ public class Monmon extends Monmon_Config{
         }
 
         if(gamepad1.left_trigger > 0){
-            lColl.setPower(1);
-            rColl.setPower(-1);
+            lColl.setPower(0.3);
+            rColl.setPower(-0.3);
         }
 
         if(gamepad1.dpad_left){
@@ -280,64 +286,71 @@ public class Monmon extends Monmon_Config{
     }
 
     public void fwdWithTime(double pwr, long time, LinearOpMode opmode){
-        LF.setPower(pwr);
-        LB.setPower(pwr);
-        RF.setPower(pwr);
-        RB.setPower(pwr);
+        correction = checkDirection(GAIN);
+        LF.setPower(pwr - correction);
+        LB.setPower(pwr + correction);
+        RF.setPower(pwr - correction);
+        RB.setPower(pwr + correction);
         opmode.sleep(time);
         killAll();
     }
 
     public void bckWithEncoder(double pwr, int pulses, LinearOpMode opmode){
         while(LF.getCurrentPosition() > -pulses && opmode.opModeIsActive()){
-            LF.setPower(-pwr);
-            LB.setPower(-pwr);
-            RF.setPower(-pwr);
-            RB.setPower(-pwr);
+            correction = checkDirection(GAIN);
+            LF.setPower(-pwr - correction);
+            LB.setPower(-pwr + correction);
+            RF.setPower(-pwr - correction);
+            RB.setPower(-pwr + correction);
         }
     }
 
     public void bckWithTime(double pwr, long time, LinearOpMode opmode){
-        LF.setPower(-pwr);
-        LB.setPower(-pwr);
-        RF.setPower(-pwr);
-        RB.setPower(-pwr);
+        correction = checkDirection(GAIN);
+        LF.setPower(-pwr - correction);
+        LB.setPower(-pwr + correction);
+        RF.setPower(-pwr - correction);
+        RB.setPower(-pwr + correction);
         opmode.sleep(time);
         killAll();
     }
 
     public void strafeLeftWithEnc(double pwr, int pulses, LinearOpMode opmode){
         while(LF.getCurrentPosition() > -pulses && opmode.opModeIsActive()){
-            LF.setPower(-pwr);
-            LB.setPower(pwr);
-            RF.setPower(pwr);
-            RB.setPower(-pwr);
+            correction = checkDirection(GAIN);
+            LF.setPower(-pwr - correction);
+            LB.setPower(pwr + correction);
+            RF.setPower(pwr - correction);
+            RB.setPower(-pwr + correction);
         }
     }
 
     public void strafeRightWithEnc(double pwr, int pulses, LinearOpMode opmode){
         while(LF.getCurrentPosition() < pulses && opmode.opModeIsActive()){
-            LF.setPower(pwr);
-            LB.setPower(-pwr);
-            RF.setPower(-pwr);
-            RB.setPower(pwr);
+            correction = checkDirection(GAIN);
+            LF.setPower(pwr - correction);
+            LB.setPower(-pwr + correction);
+            RF.setPower(-pwr - correction);
+            RB.setPower(pwr + correction);
         }
     }
 
     public void diagRightWithEnc(double fwdpwr, double rhtpwr, int pulses, LinearOpMode opmode){
         if(fwdpwr > 0) {
             while (LF.getCurrentPosition() < pulses && opmode.opModeIsActive()) {
-                LF.setPower(fwdpwr);
-                LB.setPower(-rhtpwr);
-                RF.setPower(-rhtpwr);
-                RB.setPower(fwdpwr);
+                correction = checkDirection(GAIN);
+                LF.setPower(fwdpwr - correction);
+                LB.setPower(-rhtpwr + correction);
+                RF.setPower(-rhtpwr - correction);
+                RB.setPower(fwdpwr + correction);
             }
         }else{
             while (LF.getCurrentPosition() > pulses && opmode.opModeIsActive()) {
-                LF.setPower(fwdpwr);
-                LB.setPower(-rhtpwr);
-                RF.setPower(-rhtpwr);
-                RB.setPower(fwdpwr);
+                correction = checkDirection(GAIN);
+                LF.setPower(fwdpwr - correction);
+                LB.setPower(-rhtpwr + correction);
+                RF.setPower(-rhtpwr - correction);
+                RB.setPower(fwdpwr + correction);
             }
         }
     }
@@ -345,17 +358,19 @@ public class Monmon extends Monmon_Config{
     public void diagLeftWithEnc(double fwdpwr, double lftpwr, int pulses, LinearOpMode opmode){
         if(fwdpwr > 0) {
             while (LF.getCurrentPosition() > -pulses && opmode.opModeIsActive()) {
-                LF.setPower(-lftpwr);
-                LB.setPower(fwdpwr);
-                RF.setPower(fwdpwr);
-                RB.setPower(-lftpwr);
+                correction = checkDirection(GAIN);
+                LF.setPower(-lftpwr - correction);
+                LB.setPower(fwdpwr + correction);
+                RF.setPower(fwdpwr - correction);
+                RB.setPower(-lftpwr + correction);
             }
         }else{
             while (LF.getCurrentPosition() < -pulses && opmode.opModeIsActive()) {
-                LF.setPower(-lftpwr);
-                LB.setPower(fwdpwr);
-                RF.setPower(fwdpwr);
-                RB.setPower(-lftpwr);
+                correction = checkDirection(GAIN);
+                LF.setPower(-lftpwr - correction);
+                LB.setPower(fwdpwr + correction);
+                RF.setPower(fwdpwr - correction);
+                RB.setPower(-lftpwr + correction);
             }
         }
     }
