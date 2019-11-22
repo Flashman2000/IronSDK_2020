@@ -30,13 +30,18 @@ public class Red_Auto extends LinearOpMode {
         telemetry.addData("Position", SkystoneLocation);
         telemetry.update();
 
+        robot.alignSkystone(SkystoneLocation);
+        robot.killAll();
+        robot.resetEncoders();
+
         robot.closePipeline(); //avoid RAM leakage
 
         if(SkystoneLocation == "Left" || SkystoneLocation == "NOT FOUND"){
 
-            robot.diagRightWithEnc(0.75, 0.5, 1300, this);
+            robot.strafeRightWithEnc(0.6, 1832, this);
+            robot.killAll();
             robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 800, this);
+            robot.bckWithEncoder(0.6, 80, this);
             robot.killAll();
             robot.resetEncoders();
             robot.grabFront();
@@ -76,12 +81,13 @@ public class Red_Auto extends LinearOpMode {
         }
 
         if(SkystoneLocation == "Center"){
-            robot.diagRightWithEnc(0.7, 0.5, 1300, this);
-            robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 800, this);
+            robot.strafeRightWithEnc(0.6, 1832, this);
             robot.killAll();
             robot.resetEncoders();
-            robot.grabBack();
+            robot.fwdWithEncoder(0.6, 80, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.grabFront();
             sleep(800);
             robot.strafeLeftWithEnc(0.6, 400, this);
             robot.resetEncoders();
@@ -117,10 +123,10 @@ public class Red_Auto extends LinearOpMode {
 
         if(SkystoneLocation == "Right"){
 
-            robot.diagLeftWithEnc(-0.6, -0.45, -1100, this);
+            robot.strafeRightWithEnc(0.6, 1832, this);
+            robot.killAll();
             robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 550, this);
-            //robot.selfCorrect();
+            robot.fwdWithEncoder(0.6, 80, this);
             robot.killAll();
             robot.resetEncoders();
             robot.grabBack();

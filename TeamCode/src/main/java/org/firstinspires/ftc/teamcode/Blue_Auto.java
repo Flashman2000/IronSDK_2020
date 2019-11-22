@@ -25,13 +25,18 @@ public class Blue_Auto extends LinearOpMode {
         telemetry.addData("Position", SkystoneLocation);
         telemetry.update();
 
+        robot.alignSkystone(SkystoneLocation);
+        robot.killAll();
+        robot.resetEncoders();
+
         robot.closePipeline(); //avoid RAM leakage
 
         if(SkystoneLocation == "Left" || SkystoneLocation == "NOT FOUND"){
 
-            robot.diagRightWithEnc(0.65, 0.5, 1300, this);
+            robot.strafeRightWithEnc(0.6, 1832, this);
+            robot.killAll();
             robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 900, this);
+            robot.bckWithEncoder(0.6, 80, this);
             robot.killAll();
             robot.resetEncoders();
             robot.grabFront();
@@ -65,14 +70,18 @@ public class Blue_Auto extends LinearOpMode {
             robot.leftArm.setPosition(1);
             robot.rightArm.setPosition(0);
             sleep(2000);
+            robot.strafeRightWithTime(0.3, 2000, this);
+            robot.killAll();
+            robot.resetEncoders();
 
         }
 
         if(SkystoneLocation == "Center"){
 
-            robot.diagLeftWithEnc(-0.6, -0.45, -1100, this);
+            robot.strafeRightWithEnc(0.6, 1832, this);
+            robot.killAll();
             robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 550, this);
+            robot.fwdWithEncoder(0.6, 80, this);
             robot.killAll();
             robot.resetEncoders();
             robot.grabFront();
@@ -107,14 +116,18 @@ public class Blue_Auto extends LinearOpMode {
             robot.leftArm.setPosition(1);
             robot.rightArm.setPosition(0);
             sleep(2000);
+            robot.strafeRightWithTime(0.3, 2000, this);
+            robot.killAll();
+            robot.resetEncoders();
 
         }
 
         if(SkystoneLocation == "Right"){
 
-            robot.diagLeftWithEnc(-0.6, -0.45, -1100, this);
+            robot.strafeRightWithEnc(0.6, 1832, this);
+            robot.killAll();
             robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 550, this);
+            robot.fwdWithEncoder(0.6, 120, this);
             robot.killAll();
             robot.resetEncoders();
             robot.grabBack();
@@ -153,6 +166,9 @@ public class Blue_Auto extends LinearOpMode {
             robot.leftArm.setPosition(1);
             robot.rightArm.setPosition(0);
             sleep(2000);
+            robot.strafeRightWithTime(0.3, 2000, this);
+            robot.killAll();
+            robot.resetEncoders();
 
 
         }
