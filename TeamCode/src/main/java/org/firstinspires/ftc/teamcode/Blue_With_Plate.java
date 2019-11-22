@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.configs.Monmon;
 
-@Autonomous(name = "Test Blue")
+@Autonomous(name = "Test Blue Plate")
 public class Blue_With_Plate extends LinearOpMode {
 
     Monmon robot = new Monmon();
@@ -15,6 +15,8 @@ public class Blue_With_Plate extends LinearOpMode {
     public void runOpMode(){
 
         robot.initAuto(hardwareMap, telemetry, this, true);
+
+        waitForStart();
 
         robot.releaseBack();
         robot.releaseFront();
@@ -26,131 +28,251 @@ public class Blue_With_Plate extends LinearOpMode {
         telemetry.addData("Position", SkystoneLocation);
         telemetry.update();
 
-        robot.closePipeline(); //avoid RAM leakage
+        robot.alignSkystone(SkystoneLocation);
+        robot.killAll();
+        robot.resetEncoders();
 
+        robot.closePipeline(); //avoid RAM leakaation == "NOT FOUNDge
+                                                                 
         if(SkystoneLocation == "Left" || SkystoneLocation == "NOT FOUND"){
-
-            robot.diagRightWithEnc(0.65, 0.5, 1300, this);
+            robot.strafeRightWithEnc(0.6, 1832, this);
+            robot.killAll();
             robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 900, this);
+            robot.bckWithEncoder(0.6, 80, this);
             robot.killAll();
             robot.resetEncoders();
             robot.grabFront();
             sleep(800);
-            robot.strafeLeftWithEnc(0.6, 600, this);
-            robot.resetEncoders();
-            robot.fwdWithEncoder(0.85, 3000, this);
+            robot.strafeLeftWithEnc(0.6, 350, this);
             robot.killAll();
-            //robot.selfCorrect();
             robot.resetEncoders();
+            robot.turnLeftGyro(80, this);
+            robot.killAll();
+            robot.setMaintainedHeading(85);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.strafeRightWithEnc(0.8, 4500, this);
             robot.releaseFront();
-            sleep(500);
-            robot.bckWithEncoder(0.6, 3800, this);
+            robot.strafeRightWithEnc(0.68, 6000, this);
+            //robot.strafeRightWithTime(0.2, 2000, this);
             robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 400, this);
+            robot.setMaintainedHeading(90);
+            //robot.strafeLeftWithEnc(0.3, 900, this);
+            robot.killAll();
+            robot.resetEncoders();
+            //robot.strafeRightWithEnc(0.3, 800, this);
+            robot.resetEncoders();
+            robot.bckWithTime(0.3, 1000, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.clampBack();
+            sleep(1000);
+            //robot.bckWithTime(0.3, 200, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.fwdWithEncoder(1, 850, this);
+            robot.turnLeft180(this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.unclampBack();
+            sleep(1000);
+            robot.fwdWithEncoderNoCorrect(0.6, 200, this);
+            robot.resetEncoders();
+            robot.turnRightEnc(0.6, 600, this);
+            robot.turnRightGyro(90, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.strafeLeftWithEnc(0.9, 5650, this);
+            robot.reOrient(this);
+            robot.killAll();
+            robot.setMaintainedHeading(0);
+            robot.resetEncoders();
+            robot.strafeRightWithEnc(0.6, 200, this);
             robot.killAll();
             robot.resetEncoders();
             robot.grabBack();
             sleep(800);
-            robot.strafeLeftWithEnc(0.6, 750, this);
-            //robot.selfCorrect();
+            robot.strafeLeftWithEnc(0.6, 450, this);
+            robot.killAll();
             robot.resetEncoders();
-            robot.fwdWithEncoder(1, 3800, this);
+            robot.turnLeftGyro(80, this);
+            robot.killAll();
+            robot.setMaintainedHeading(85);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.strafeRightWithEnc(1, 4500, this);
             robot.killAll();
             robot.resetEncoders();
             robot.releaseBack();
-            sleep(500);
-            robot.fwdWithEncoder(0.6, 2198, this);
-            robot.turnLeftGyro(90, this);
+            sleep(1000);
+            robot.strafeLeftWithEnc(1, 1000, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.reOrient(this);
+            robot.killAll();
 
         }
 
         if(SkystoneLocation == "Center"){
 
-            robot.diagLeftWithEnc(-0.6, -0.45, -1100, this);
+            robot.strafeRightWithEnc(0.6, 1832, this);
+            robot.killAll();
             robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 550, this);
+            robot.fwdWithEncoder(0.6, 80, this);
             robot.killAll();
             robot.resetEncoders();
             robot.grabFront();
             sleep(800);
-            robot.strafeLeftWithEnc(0.6, 550, this);
-            robot.resetEncoders();
-            robot.fwdWithEncoder(0.85, 3300, this);
+            robot.strafeLeftWithEnc(0.6, 350, this);
             robot.killAll();
             robot.resetEncoders();
+            robot.turnLeftGyro(80, this);
+            robot.killAll();
+            robot.setMaintainedHeading(85);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.strafeRightWithEnc(0.8, 4500, this);
             robot.releaseFront();
-            sleep(500);
-            robot.bckWithEncoder(0.6, 4200, this);
+            robot.strafeRightWithEnc(0.68, 6000, this);
+            //robot.strafeRightWithTime(0.2, 2000, this);
             robot.resetEncoders();
+            robot.setMaintainedHeading(90);
+            //robot.strafeLeftWithEnc(0.3, 900, this);
             robot.killAll();
             robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 550, this);
+            //robot.strafeRightWithEnc(0.3, 800, this);
+            robot.resetEncoders();
+            robot.bckWithTime(0.3, 1000, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.clampBack();
+            sleep(1000);
+            //robot.bckWithTime(0.3, 200, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.fwdWithEncoder(1, 850, this);
+            robot.turnLeft180(this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.unclampBack();
+            sleep(1000);
+            robot.fwdWithEncoderNoCorrect(0.6, 200, this);
+            robot.resetEncoders();
+            robot.turnRightEnc(0.6, 600, this);
+            robot.turnRightGyro(90, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.strafeLeftWithEnc(0.9, 6250, this);
+            robot.reOrient(this);
+            robot.killAll();
+            robot.setMaintainedHeading(0);
+            robot.resetEncoders();
+            robot.strafeRightWithEnc(0.6, 200, this);
             robot.killAll();
             robot.resetEncoders();
             robot.grabBack();
             sleep(800);
-            robot.strafeLeftWithEnc(0.6, 800, this);
+            robot.strafeLeftWithEnc(0.6, 400, this);
+            robot.killAll();
             robot.resetEncoders();
-            robot.fwdWithEncoder(1, 1500, this);
-            robot.fwdWithEncoder(1, 4400, this);
+            robot.turnLeftGyro(80, this);
+            robot.killAll();
+            robot.setMaintainedHeading(85);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.strafeRightWithEnc(1, 4500, this);
             robot.killAll();
             robot.resetEncoders();
             robot.releaseBack();
-            sleep(500);
-            robot.bckWithEncoder(0.6, 800, this);
+            sleep(1000);
+            robot.strafeLeftWithEnc(1, 1000, this);
             robot.killAll();
             robot.resetEncoders();
-            robot.leftArm.setPosition(1);
-            robot.rightArm.setPosition(0);
-            sleep(2000);
+            robot.reOrient(this);
+            robot.killAll();
 
         }
 
         if(SkystoneLocation == "Right"){
 
-            robot.diagLeftWithEnc(-0.6, -0.45, -1100, this);
+            robot.strafeRightWithEnc(0.6, 1832, this);
+            robot.killAll();
             robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 550, this);
+            robot.fwdWithEncoder(0.6, 120, this);
             robot.killAll();
             robot.resetEncoders();
             robot.grabBack();
             sleep(800);
-            robot.strafeLeftWithEnc(0.6, 550, this);
-            robot.resetEncoders();
-            robot.fwdWithEncoder(0.85, 3300, this);
-            //robot.selfCorrect();
+            robot.strafeLeftWithEnc(0.6, 420, this);
             robot.killAll();
             robot.resetEncoders();
+            robot.turnLeftGyro(80, this);
+            robot.killAll();
+            robot.setMaintainedHeading(85);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.strafeRightWithEnc(0.8, 4500, this);
             robot.releaseBack();
-            sleep(500);
-            robot.bckWithEncoder(0.85, 3500, this);
+            robot.strafeRightWithEnc(0.68, 6080, this);
+            //robot.strafeRightWithTime(0.2, 2000, this);
             robot.resetEncoders();
-            //robot.bckWithEncoder(0.1, 400, this);
-            robot.bckWithTime(0.3,1500, this);
+            robot.setMaintainedHeading(90);
+            //robot.strafeLeftWithEnc(0.3, 900, this);
             robot.killAll();
             robot.resetEncoders();
-            robot.strafeRightWithEnc(0.6, 650, this);
+            //robot.strafeRightWithEnc(0.3, 800, this);
+            robot.resetEncoders();
+            robot.bckWithTime(0.3, 1000, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.clampBack();
+            sleep(1000);
+            //robot.bckWithTime(0.3, 200, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.fwdWithEncoder(1, 850, this);
+            robot.turnLeft180(this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.unclampBack();
+            sleep(1000);
+            robot.fwdWithEncoderNoCorrect(0.6, 200, this);
+            robot.resetEncoders();
+            robot.turnRightEnc(0.6, 600, this);
+            robot.turnRightGyro(90, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.strafeLeftWithEnc(0.9, 6750, this);
+            robot.reOrient(this);
+            robot.killAll();
+            robot.setMaintainedHeading(0);
+            robot.resetEncoders();
+            robot.bckWithEncoder(0.6, 200, this);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.strafeRightWithEnc(0.6, 200, this);
             robot.killAll();
             robot.resetEncoders();
             robot.grabBack();
             sleep(800);
-            robot.strafeLeftWithEnc(0.6, 800, this);
-            //robot.selfCorrect();
+            robot.strafeLeftWithEnc(0.6, 400, this);
+            robot.killAll();
             robot.resetEncoders();
-            robot.fwdWithEncoder(1, 1500, this);
-            robot.fwdWithEncoder(1, 4400, this);
+            robot.turnLeftGyro(80, this);
+            robot.killAll();
+            robot.setMaintainedHeading(85);
+            robot.killAll();
+            robot.resetEncoders();
+            robot.strafeRightWithEnc(1, 4500, this);
             robot.killAll();
             robot.resetEncoders();
             robot.releaseBack();
-            sleep(500);
-            robot.bckWithEncoder(0.6, 400, this);
+            sleep(1000);
+            robot.strafeLeftWithEnc(1, 1000, this);
             robot.killAll();
             robot.resetEncoders();
-            robot.leftArm.setPosition(1);
-            robot.rightArm.setPosition(0);
-            sleep(2000);
-
+            robot.reOrient(this);
+            robot.killAll();
 
         }
 

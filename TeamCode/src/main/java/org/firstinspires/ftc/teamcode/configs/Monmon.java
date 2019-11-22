@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class Monmon extends Monmon_Config{
+    public double maintainedHeading = 0;
 
     public Monmon(){ }
 
@@ -74,21 +75,13 @@ public class Monmon extends Monmon_Config{
         RF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         RB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        if(camEnable){detector.camSetup(hardwareMap);}
+        detector.camSetup(hardwareMap);
 
         angles  = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         telemetry.addLine("Ready");
         telemetry.update();
 
-        if(camEnable) {
-            while (!opmode.isStarted()) {
-                String loc = detectSkystone();
-
-                telemetry.addData("Position", loc);
-                telemetry.update();
-            }
-        }
 
     }
 
@@ -289,6 +282,24 @@ public class Monmon extends Monmon_Config{
         RB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    public void turnRightEnc(double pwr, int pulses, LinearOpMode opmode){
+        while(LF.getCurrentPosition() < pulses && opmode.opModeIsActive()) {
+            LF.setPower(pwr);
+            LB.setPower(-pwr);
+            RF.setPower(pwr);
+            RB.setPower(-pwr);
+        }
+    }
+
+    public void turnLeftEnc(double pwr, int pulses, LinearOpMode opmode){
+        while(LF.getCurrentPosition() > -pulses && opmode.opModeIsActive()) {
+            LF.setPower(-pwr);
+            LB.setPower(pwr);
+            RF.setPower(-pwr);
+            RB.setPower(pwr);
+        }
+    }
+
     public void fwdWithEncoder(double pwr, int pulses, LinearOpMode opmode){
         while(LF.getCurrentPosition() < pulses && opmode.opModeIsActive()){
             correction = checkDirection(GAIN);
@@ -296,6 +307,15 @@ public class Monmon extends Monmon_Config{
             LB.setPower(pwr + correction);
             RF.setPower(pwr - correction);
             RB.setPower(pwr + correction);
+        }
+    }
+
+    public void fwdWithEncoderNoCorrect(double pwr, int pulses, LinearOpMode opmode){
+        while(LF.getCurrentPosition() < pulses && opmode.opModeIsActive()){
+            LF.setPower(pwr);
+            LB.setPower(pwr);
+            RF.setPower(pwr);
+            RB.setPower(pwr);
         }
     }
 
@@ -326,7 +346,6 @@ public class Monmon extends Monmon_Config{
         RF.setPower(-pwr - correction);
         RB.setPower(-pwr + correction);
         opmode.sleep(time);
-        killAll();
     }
 
     public void strafeLeftWithEnc(double pwr, int pulses, LinearOpMode opmode){
@@ -347,6 +366,26 @@ public class Monmon extends Monmon_Config{
             RF.setPower(-pwr - correction);
             RB.setPower(pwr + correction);
         }
+    }
+
+    public void strafeRightWithTime(double pwr, long time, LinearOpMode opmode){
+        correction = checkDirection(GAIN);
+        LF.setPower(pwr - correction);
+        LB.setPower(-pwr + correction);
+        RF.setPower(-pwr - correction);
+        RB.setPower(pwr + correction);
+        opmode.sleep(time);
+        killAll();
+    }
+
+    public void strafeLeftWithTime(double pwr, long time, LinearOpMode opmode){
+        correction = checkDirection(GAIN);
+        LF.setPower(-pwr - correction);
+        LB.setPower(pwr + correction);
+        RF.setPower(pwr - correction);
+        RB.setPower(-pwr + correction);
+        opmode.sleep(time);
+        killAll();
     }
 
     public void diagRightWithEnc(double fwdpwr, double rhtpwr, int pulses, LinearOpMode opmode){
@@ -410,13 +449,27 @@ public class Monmon extends Monmon_Config{
         backYk.setPosition(0.2);
     }
 
+    public void clampBack(){
+        backL.setPosition(0);
+        backR.setPosition(0);
+    }
+
+    public void unclampBack(){
+        backL.setPosition(1);
+        backR.setPosition(1);
+    }
+
+    public void setMaintainedHeading(double heading){
+        maintainedHeading = heading;
+    }
+
     public double checkDirection(double adj) {
         // The gain value determines how sensitive the correction is to direction changes.
         // You will have to experiment with your robot to get small smooth direction changes
         // to stay on a straight line.
         double correction, angle, gain = adj;
 
-        angle = imu.getAngularOrientation().firstAngle;
+        angle = imu.getAngularOrientation().firstAngle - maintainedHeading;
 
         if (angle == 0)
             correction = 0;             // no adjustment.
@@ -428,30 +481,55 @@ public class Monmon extends Monmon_Config{
         return correction;
     }
 
-    public void turnLeftGyro(double target, LinearOpMode opmode){
-
-        while(imu.getAngularOrientation().firstAngle < target && opmode.opModeIsActive()) {
-            double pwrcalc = Math.pow(target, 2) - Math.pow(imu.getAngularOrientation().firstAngle, 2) / Math.pow(target, 2);
-            double pwr = Range.clip(pwrcalc, 0.3, 1);
-            LF.setPower(-pwr);
-            LB.setPower(pwr);
-            RF.setPower(-pwr);
-            RB.setPower(pwr);
+    public void turnLeftGyro(double target, LinearOpMode opmode) {
+        if (target > 0){
+            while (imu.getAngularOrientation().firstAngle < target && opmode.opModeIsActive()) {
+                double pwrcalc = Math.pow(target, 2) - Math.pow(imu.getAngularOrientation().firstAngle, 2) / Math.pow(target, 2);
+                double pwr = Range.clip(pwrcalc, 0.1, 0.6);
+                LF.setPower(-pwr);
+                LB.setPower(pwr);
+                RF.setPower(-pwr);
+                RB.setPower(pwr);
+            }
+            killAll();
         }
-        killAll();
+        if(target < 0){
+            while(imu.getAngularOrientation().firstAngle < target && opmode.opModeIsActive()){
+                double pwrcalc = Math.pow(target, 2) - Math.pow(imu.getAngularOrientation().firstAngle, 2) / Math.pow(target, 2);
+                double pwr = Range.clip(pwrcalc, -0.6, -0.1);
+                LF.setPower(pwr);
+                LB.setPower(-pwr);
+                RF.setPower(pwr);
+                RB.setPower(-pwr);
+            }
+            killAll();
+        }
     }
 
     public void turnRightGyro(double target, LinearOpMode opmode){
 
-        while(imu.getAngularOrientation().firstAngle > -target && opmode.opModeIsActive()) {
-            double pwrcalc = -Math.pow(target, 2) + Math.pow(imu.getAngularOrientation().firstAngle, 2) / -Math.pow(target, 2);
-            double pwr = Range.clip(pwrcalc, 0.3, 1);
-            LF.setPower(pwr);
-            LB.setPower(-pwr);
-            RF.setPower(pwr);
-            RB.setPower(-pwr);
+        if (target > 0){
+            while (imu.getAngularOrientation().firstAngle > target && opmode.opModeIsActive()) {
+                double pwrcalc = Math.pow(target, 2) - Math.pow(imu.getAngularOrientation().firstAngle, 2) / Math.pow(target, 2);
+                double pwr = Range.clip(pwrcalc, 0.1, 0.6);
+                LF.setPower(pwr);
+                LB.setPower(-pwr);
+                RF.setPower(pwr);
+                RB.setPower(-pwr);
+            }
+            killAll();
         }
-        killAll();
+        if(target < 0){
+            while(imu.getAngularOrientation().firstAngle > target && opmode.opModeIsActive()){
+                double pwrcalc = Math.pow(target, 2) - Math.pow(imu.getAngularOrientation().firstAngle, 2) / Math.pow(target, 2);
+                double pwr = Range.clip(pwrcalc, -0.6, -0.1);
+                LF.setPower(-pwr);
+                LB.setPower(pwr);
+                RF.setPower(-pwr);
+                RB.setPower(pwr);
+            }
+            killAll();
+        }
 
     }
 
@@ -492,6 +570,55 @@ public class Monmon extends Monmon_Config{
             }
             killAll();
         }
+    }
+
+    public void alignSkystone(String orientation){
+
+        //vals are stored in 1, 0, 2 from left to right
+
+        detector.updateVals();
+        vals = detector.getVals();
+
+        if(orientation == "Left" || orientation == "NOT FOUND"){
+            while(vals[0] > 210){
+                detector.updateVals();
+                vals = detector.getVals();
+                correction = checkDirection(GAIN);
+                LF.setPower(0.25);
+                LB.setPower(0.25);
+                RF.setPower(0.25);
+                RB.setPower(0.25);
+            }
+            killAll();
+
+        }
+
+        if(orientation == "Center"){
+            while(vals[1] > 210){
+                detector.updateVals();
+                vals = detector.getVals();
+                correction = checkDirection(GAIN);
+                LF.setPower(-0.25);
+                LB.setPower(-0.25);
+                RF.setPower(-0.25);
+                RB.setPower(-0.25);
+            }
+            killAll();
+        }
+
+        if(orientation == "Right"){
+            while(vals[0] > 210){
+                detector.updateVals();
+                vals = detector.getVals();
+                correction = checkDirection(GAIN);
+                LF.setPower(-0.25);
+                LB.setPower(-0.25);
+                RF.setPower(-0.25);
+                RB.setPower(-0.25);
+            }
+            killAll();
+        }
+
     }
 
 }

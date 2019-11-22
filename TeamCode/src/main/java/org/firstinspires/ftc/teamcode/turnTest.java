@@ -14,12 +14,29 @@ public class turnTest extends LinearOpMode {
     public void runOpMode(){
 
         robot.initAuto(hardwareMap, telemetry, this, false);
-
-        robot.turnLeftGyro(90, this);
-
-        sleep(2500);
-
+        waitForStart();
+        robot.resetEncoders();
+        telemetry.addLine("Pass 1");
+        telemetry.update();
+        robot.turnLeftGyro(80, this);
+        telemetry.addLine("Pass 2");
+        telemetry.update();
+        robot.setMaintainedHeading(90);
+        robot.killAll();
+        robot.resetEncoders();
+        robot.strafeRightWithEnc(0.6, 4000, this);
+        robot.resetEncoders();
+        telemetry.addLine("Pass 3");
+        telemetry.update();
+        robot.strafeLeftWithEnc(0.6, 4000, this);
+        robot.killAll();
+        robot.resetEncoders();
+        telemetry.addLine("Pass 4");
+        telemetry.update();
+        sleep(5000);
         robot.turnLeft180(this);
+        robot.killAll();
+        sleep(2500);
 
     }
 
