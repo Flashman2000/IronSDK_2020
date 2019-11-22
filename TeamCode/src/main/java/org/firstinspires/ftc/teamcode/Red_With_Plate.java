@@ -65,7 +65,7 @@ public class Red_With_Plate extends LinearOpMode {
             robot.killAll();
             robot.resetEncoders();
             robot.fwdWithEncoder(1, 850, this);
-            robot.turnRight180(this);
+            robot.turnRight180(1,this);
             robot.killAll();
             robot.releaseFront();
             robot.resetEncoders();
@@ -144,7 +144,7 @@ public class Red_With_Plate extends LinearOpMode {
             robot.killAll();
             robot.resetEncoders();
             robot.fwdWithEncoder(1, 850, this);
-            robot.turnRight180(this);
+            robot.turnRight180(1,this);
             robot.killAll();
             robot.releaseFront();
             robot.resetEncoders();
@@ -223,7 +223,7 @@ public class Red_With_Plate extends LinearOpMode {
             robot.killAll();
             robot.resetEncoders();
             robot.fwdWithEncoder(1, 850, this);
-            robot.turnRight180(this);
+            robot.turnRight180(1,this);
             robot.killAll();
             robot.releaseBack();
             robot.resetEncoders();

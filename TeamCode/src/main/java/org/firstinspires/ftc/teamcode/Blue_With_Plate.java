@@ -71,7 +71,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.killAll();
             robot.resetEncoders();
             robot.fwdWithEncoder(1, 850, this);
-            robot.turnLeft180(this);
+            robot.turnLeft180(1,this);
             robot.killAll();
             robot.resetEncoders();
             robot.unclampBack();
@@ -154,7 +154,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.killAll();
             robot.resetEncoders();
             robot.fwdWithEncoder(1, 850, this);
-            robot.turnLeft180(this);
+            robot.turnLeft180(1,this);
             robot.killAll();
             robot.resetEncoders();
             robot.unclampBack();
@@ -191,7 +191,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.strafeLeftWithEnc(1, 1000, this);
             robot.killAll();
             robot.resetEncoders();
-            robot.reOrient(this);
+            robot.turnLeft180(0.6,this);
             robot.killAll();
             robot.leftArm.setPosition(1);
             robot.rightArm.setPosition(0);
@@ -237,7 +237,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.killAll();
             robot.resetEncoders();
             robot.fwdWithEncoder(1, 850, this);
-            robot.turnLeft180(this);
+            robot.turnLeft180(1,this);
             robot.killAll();
             robot.resetEncoders();
             robot.unclampBack();

@@ -591,7 +591,7 @@ public class Monmon extends Monmon_Config{
 
     }
 
-    public void turnLeft180(LinearOpMode opmode){
+    public void turnLeft180(double pwr, LinearOpMode opmode){
         boolean positive = true;
         while (imu.getAngularOrientation().firstAngle != 180 && positive && opmode.opModeIsActive()){
 
@@ -599,16 +599,16 @@ public class Monmon extends Monmon_Config{
                 positive = false;
             }
 
-            LF.setPower(-1);
-            LB.setPower(1);
-            RF.setPower(-1);
-            RB.setPower(1);
+            LF.setPower(-pwr);
+            LB.setPower(pwr);
+            RF.setPower(-pwr);
+            RB.setPower(pwr);
         }
         killAll();
 
     }
 
-    public void turnRight180(LinearOpMode opmode){
+    public void turnRight180(double pwr, LinearOpMode opmode){
         boolean negative = true;
         while (imu.getAngularOrientation().firstAngle != -180 && negative && opmode.opModeIsActive()){
 
@@ -616,10 +616,10 @@ public class Monmon extends Monmon_Config{
                 negative = false;
             }
 
-            LF.setPower(1);
-            LB.setPower(-1);
-            RF.setPower(1);
-            RB.setPower(-1);
+            LF.setPower(pwr);
+            LB.setPower(-pwr);
+            RF.setPower(pwr);
+            RB.setPower(-pwr);
         }
         killAll();
     }
