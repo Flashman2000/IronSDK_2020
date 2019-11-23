@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.configs;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.IronCV.IronCVDetectorClass;
@@ -34,6 +35,9 @@ public class Monmon_Config {
     public Orientation angles;
 
     public IronCVDetectorClass detector = new IronCVDetectorClass();
+
+    public RevBlinkinLedDriver blinkinLedDriver;
+    public RevBlinkinLedDriver.BlinkinPattern pattern;
 
     public String pos;
 

@@ -45,7 +45,6 @@ public class Blue_Auto extends LinearOpMode {
             robot.resetEncoders();
             robot.fwdWithEncoder(0.85, 3000, this);
             robot.killAll();
-            //robot.selfCorrect();
             robot.resetEncoders();
             robot.releaseFront();
             sleep(500);
@@ -57,7 +56,6 @@ public class Blue_Auto extends LinearOpMode {
             robot.grabBack();
             sleep(800);
             robot.strafeLeftWithEnc(0.6, 750, this);
-            //robot.selfCorrect();
             robot.resetEncoders();
             robot.fwdWithEncoder(1, 3800, this);
             robot.killAll();
@@ -135,14 +133,12 @@ public class Blue_Auto extends LinearOpMode {
             robot.strafeLeftWithEnc(0.6, 550, this);
             robot.resetEncoders();
             robot.fwdWithEncoder(0.85, 3300, this);
-            //robot.selfCorrect();
             robot.killAll();
             robot.resetEncoders();
             robot.releaseBack();
             sleep(500);
             robot.bckWithEncoder(0.85, 3500, this);
             robot.resetEncoders();
-            //robot.bckWithEncoder(0.1, 400, this);
             robot.bckWithTime(0.3,1500, this);
             robot.killAll();
             robot.resetEncoders();
@@ -152,7 +148,6 @@ public class Blue_Auto extends LinearOpMode {
             robot.grabBack();
             sleep(800);
             robot.strafeLeftWithEnc(0.6, 800, this);
-            //robot.selfCorrect();
             robot.resetEncoders();
             robot.fwdWithEncoder(1, 1500, this);
             robot.fwdWithEncoder(1, 4400, this);

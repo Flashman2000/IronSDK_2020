@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.configs;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -81,6 +82,10 @@ public class Monmon extends Monmon_Config{
 
         angles  = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
+        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+        pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
+        blinkinLedDriver.setPattern(pattern);
+
         telemetry.addLine("Ready");
         telemetry.update();
 
@@ -119,6 +124,10 @@ public class Monmon extends Monmon_Config{
 
         frontYk = hardwareMap.get(Servo.class, "frntyk");
         backYk = hardwareMap.get(Servo.class, "bckyk");
+
+        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+        pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
+        blinkinLedDriver.setPattern(pattern);
 
 
         LF.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -452,12 +461,12 @@ public class Monmon extends Monmon_Config{
     }
 
     public void primeBack(){
-        backL.setPosition(0.5);
-        backR.setPosition(0.5);
+        backL.setPosition(0.6);
+        backR.setPosition(0.4);
     }
 
     public void clampBack(){
-        backL.setPosition(0);
+        backL.setPosition(0.1);
         backR.setPosition(0);
     }
 
@@ -479,7 +488,7 @@ public class Monmon extends Monmon_Config{
         if(maintainedHeading >= 0) {
             angle = imu.getAngularOrientation().firstAngle - maintainedHeading;
         }else if(maintainedHeading < 0){
-            angle = -maintainedHeading - imu.getAngularOrientation().firstAngle;
+            angle = maintainedHeading - imu.getAngularOrientation().firstAngle;
         }
 
         if (angle == 0)
@@ -496,7 +505,8 @@ public class Monmon extends Monmon_Config{
 
         if(target > 0) {
             while (imu.getAngularOrientation().firstAngle < target && opmode.opModeIsActive()) {
-                double pwr = Range.clip((target - imu.getAngularOrientation().firstAngle) / target, 0.3, 1);
+                //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
+                double pwr = Range.clip(Math.abs(0.011*(imu.getAngularOrientation().firstAngle - target)), 0.3, 1);
                 LF.setPower(-pwr);
                 LB.setPower(pwr);
                 RF.setPower(-pwr);
@@ -506,16 +516,17 @@ public class Monmon extends Monmon_Config{
         }
         if(target < 0){
             while(imu.getAngularOrientation().firstAngle < target && opmode.opModeIsActive()) {
-                double pwr = Range.clip((target - imu.getAngularOrientation().firstAngle) / target, -1, -0.3);
-                LF.setPower(pwr);
-                LB.setPower(-pwr);
-                RF.setPower(pwr);
-                RB.setPower(-pwr);
+                //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
+                double pwr = Range.clip(Math.abs(0.011*(imu.getAngularOrientation().firstAngle - target)), 0.3, 1);
+                LF.setPower(-pwr);
+                LB.setPower(pwr);
+                RF.setPower(-pwr);
+                RB.setPower(pwr);
             }
             killAll();
         }
 
-        /**
+        /*
         if (target > 0){
             while (imu.getAngularOrientation().firstAngle < target && opmode.opModeIsActive()) {
                 double pwrcalc = Math.pow(target, 2) - Math.pow(imu.getAngularOrientation().firstAngle, 2) / Math.pow(target, 2);
@@ -545,7 +556,8 @@ public class Monmon extends Monmon_Config{
 
         if(target > 0) {
             while (imu.getAngularOrientation().firstAngle > target && opmode.opModeIsActive()) {
-                double pwr = Range.clip((target - imu.getAngularOrientation().firstAngle) / target, 0.3, 1);
+                //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
+                double pwr = Range.clip(Math.abs(0.011*(imu.getAngularOrientation().firstAngle-target)), 0.3, 1);
                 LF.setPower(pwr);
                 LB.setPower(-pwr);
                 RF.setPower(pwr);
@@ -555,16 +567,17 @@ public class Monmon extends Monmon_Config{
         }
         if(target < 0){
             while (imu.getAngularOrientation().firstAngle > target && opmode.opModeIsActive()) {
-                double pwr = Range.clip((target - imu.getAngularOrientation().firstAngle) / target, -1, -0.3);
-                LF.setPower(-pwr);
-                LB.setPower(pwr);
-                RF.setPower(-pwr);
-                RB.setPower(pwr);
+                //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
+                double pwr = Range.clip(Math.abs(0.011*(imu.getAngularOrientation().firstAngle-target)), 0.3, 1);
+                LF.setPower(pwr);
+                LB.setPower(-pwr);
+                RF.setPower(pwr);
+                RB.setPower(-pwr);
             }
             killAll();
         }
 
-        /**
+        /*
         if (target > 0){
             while (imu.getAngularOrientation().firstAngle > target && opmode.opModeIsActive()) {
                 double pwrcalc = Math.pow(target, 2) - Math.pow(imu.getAngularOrientation().firstAngle, 2) / Math.pow(target, 2);
@@ -587,7 +600,7 @@ public class Monmon extends Monmon_Config{
             }
             killAll();
         }
-         */
+        */
 
     }
 
@@ -609,11 +622,11 @@ public class Monmon extends Monmon_Config{
     }
 
     public void turnRight180(double pwr, LinearOpMode opmode){
-        boolean negative = true;
-        while (imu.getAngularOrientation().firstAngle != -180 && negative && opmode.opModeIsActive()){
+        boolean positive = true;
+        while (imu.getAngularOrientation().firstAngle != 180 && positive && opmode.opModeIsActive()){
 
-            if(imu.getAngularOrientation().firstAngle <= 180 && imu.getAngularOrientation().firstAngle > 0){
-                negative = false;
+            if(imu.getAngularOrientation().firstAngle >= -180 && imu.getAngularOrientation().firstAngle < 0){
+                positive = false;
             }
 
             LF.setPower(pwr);

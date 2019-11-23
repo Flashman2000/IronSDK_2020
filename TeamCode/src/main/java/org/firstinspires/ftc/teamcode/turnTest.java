@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.configs.Monmon;
 
-@Autonomous(name="Turn Test")
+@Disabled
 public class turnTest extends LinearOpMode {
 
     Monmon robot = new Monmon();
@@ -18,7 +19,7 @@ public class turnTest extends LinearOpMode {
         robot.resetEncoders();
         telemetry.addLine("Pass 1");
         telemetry.update();
-        robot.turnLeftGyro(80, this);
+        robot.turnLeftGyro(85, this);
         telemetry.addLine("Pass 2");
         telemetry.update();
         robot.setMaintainedHeading(90);
@@ -34,7 +35,7 @@ public class turnTest extends LinearOpMode {
         telemetry.addLine("Pass 4");
         telemetry.update();
         sleep(5000);
-        robot.turnLeft180(this);
+        robot.turnLeft180(0.6,this);
         robot.killAll();
         sleep(2500);
 

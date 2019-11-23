@@ -49,7 +49,6 @@ public class Red_Auto extends LinearOpMode {
             robot.strafeLeftWithEnc(0.6, 400, this);
             robot.resetEncoders();
             robot.bckWithEncoder(0.6, 3300, this);
-            //robot.selfCorrect();
             robot.killAll();
             robot.resetEncoders();
             robot.releaseFront();
@@ -63,7 +62,6 @@ public class Red_Auto extends LinearOpMode {
             robot.grabFront();
             sleep(800);
             robot.strafeLeftWithEnc(0.6, 600, this);
-            //robot.selfCorrect();
             robot.resetEncoders();
             robot.bckWithEncoder(1, 1500, this);
             robot.bckWithEncoder(1, 4600, this);
@@ -77,10 +75,14 @@ public class Red_Auto extends LinearOpMode {
             robot.leftArm.setPosition(1);
             robot.rightArm.setPosition(0);
             sleep(2000);
+            robot.strafeRightWithTime(0.3, 2000, this);
+            robot.killAll();
+            robot.resetEncoders();
 
         }
 
         if(SkystoneLocation == "Center"){
+
             robot.strafeRightWithEnc(0.6, 1832, this);
             robot.killAll();
             robot.resetEncoders();
@@ -97,7 +99,6 @@ public class Red_Auto extends LinearOpMode {
             robot.releaseBack();
             sleep(500);
             robot.fwdWithEncoder(0.6, 4020, this);
-            //robot.fwdWithTime(0.15, 5000, this);
             robot.resetEncoders();
             robot.strafeRightWithEnc(0.6, 450, this);
             robot.killAll();
@@ -118,6 +119,9 @@ public class Red_Auto extends LinearOpMode {
             robot.leftArm.setPosition(1);
             robot.rightArm.setPosition(0);
             sleep(2000);
+            robot.strafeRightWithTime(0.3, 2000, this);
+            robot.killAll();
+            robot.resetEncoders();
 
         }
 
@@ -134,16 +138,12 @@ public class Red_Auto extends LinearOpMode {
             robot.strafeLeftWithEnc(0.6, 550, this);
             robot.resetEncoders();
             robot.bckWithEncoder(1, 3000, this);
-            //robot.selfCorrect();
-            telemetry.addData("First heading", robot.imu.getAngularOrientation().firstAngle);
             telemetry.update();
             robot.killAll();
             robot.resetEncoders();
             robot.releaseBack();
             sleep(500);
             robot.fwdWithEncoder(0.6, 3800, this);
-            //robot.selfCorrect();
-            telemetry.addData("Second heading", robot.imu.getAngularOrientation().firstAngle);
             telemetry.update();
             robot.resetEncoders();
             robot.strafeRightWithEnc(0.6, 550, this);
@@ -152,13 +152,10 @@ public class Red_Auto extends LinearOpMode {
             robot.grabFront();
             sleep(800);
             robot.strafeLeftWithEnc(0.6, 600, this);
-            //robot.selfCorrect();
-            telemetry.addData("Third heading", robot.imu.getAngularOrientation().firstAngle);
             telemetry.update();
             robot.resetEncoders();
             robot.bckWithEncoder(1, 1000, this);
             robot.bckWithEncoder(1, 3500, this);
-            telemetry.addData("Fourth heading", robot.imu.getAngularOrientation().firstAngle);
             telemetry.update();
             robot.killAll();
             robot.resetEncoders();
@@ -170,7 +167,9 @@ public class Red_Auto extends LinearOpMode {
             robot.leftArm.setPosition(1);
             robot.rightArm.setPosition(0);
             sleep(2000);
-
+            robot.strafeRightWithTime(0.3, 2000, this);
+            robot.killAll();
+            robot.resetEncoders();
 
         }
 
