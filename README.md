@@ -6,7 +6,6 @@
   <i>Version: 0.2-beta | Last Updated 10/18/2019</i>
 </div>
 
-<<<<<<< HEAD
 # IronSDK(2020)
 Ironclad 8080's programming repository. This repository is constantly being updated with the newest changes from Ironclad's programming team.
 
@@ -16,7 +15,6 @@ Ironclad 8080's programming repository. This repository is constantly being upda
 
 ## Project Status:
 First version of our compeition ready SDK. Future improvements will be made.
-=======
 # IronSDK
 The **beta** branch.... name kinda says it. This is the beta testing branch. Code in here usually isn't fully developed and may or may not be unstable. Beware.
 
