@@ -18,7 +18,7 @@ public class Red_With_Plate extends LinearOpMode {
 
         robot.initAuto(hardwareMap, telemetry, this, true);
 
-        robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_LAVA_PALETTE);
+        robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_LAVA_PALETTE);
 
         AutoTransitioner.transitionOnStop(this, "Teleop");
 

@@ -18,7 +18,7 @@ public class Blue_With_Plate extends LinearOpMode {
 
         robot.initAuto(hardwareMap, telemetry, this, true);
 
-        robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_OCEAN_PALETTE);
+        robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_OCEAN_PALETTE);
 
         AutoTransitioner.transitionOnStop(this, "Teleop");
 
@@ -38,7 +38,7 @@ public class Blue_With_Plate extends LinearOpMode {
         robot.killAll();
         robot.resetEncoders();
 
-        robot.closePipeline(); //avoid RAM leakaation == "NOT FOUNDge
+        robot.closePipeline(); //avoid RAM leak
                                                                  
         if(SkystoneLocation == "Left" || SkystoneLocation == "NOT FOUND"){
 
@@ -49,7 +49,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.killAll();
             robot.resetEncoders();
             robot.grabFront();
-            robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_GREEN);
+            //robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_GREEN);
             sleep(800);
             robot.strafeLeftWithEnc(0.6, 350, this); //sped up
             robot.killAll();
@@ -61,7 +61,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.resetEncoders();
             robot.strafeRightWithEnc(0.8, 4500, this);
             robot.releaseFront();
-            robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_OCEAN_PALETTE);
+            //robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_OCEAN_PALETTE);
             robot.strafeRightWithEnc(0.68, 6000, this);
             robot.resetEncoders();
             robot.killAll();
@@ -95,7 +95,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.killAll();
             robot.resetEncoders();
             robot.grabBack();
-            robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_GREEN);
+            //robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_GREEN);
             sleep(800);
             robot.strafeLeftWithEnc(0.6, 750, this);
             robot.killAll();
@@ -109,7 +109,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.killAll();
             robot.resetEncoders();
             robot.releaseBack();
-            robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_OCEAN_PALETTE);
+            //robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.COLOR_WAVES_OCEAN_PALETTE);
             sleep(1000);
             robot.strafeLeftWithEnc(1, 1000, this);
             robot.killAll();
