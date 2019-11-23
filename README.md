@@ -27,3 +27,8 @@ The **beta** branch.... name kinda says it. This is the beta testing branch. Cod
  ### Version 1.0 (11/1/2019)
   - IronCV out of beta testing
   - Competition ready SDK
+
+### Version 2.0 (11/22/2019)
+  - Optimized TeleOp 
+  - All-new 35 point auto
+  - RGB integration :)
