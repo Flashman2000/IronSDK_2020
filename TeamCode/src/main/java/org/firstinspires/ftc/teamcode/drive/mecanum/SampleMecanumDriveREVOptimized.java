@@ -20,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.util.AxesSigns;
 import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.util.LynxOptimizedI2cFactory;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.ExpansionHubServo;
@@ -32,9 +33,9 @@ import org.openftc.revextensions2.RevBulkData;
 public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     private ExpansionHubEx hub;
     private ExpansionHubEx hub2;
-    private ExpansionHubMotor leftFront, leftRear, rightRear, rightFront;
-    private ExpansionHubServo backL, backR, leftArm, rightArm;
-    private List<ExpansionHubMotor> motors;
+    public ExpansionHubMotor LF, LB, RB, RF;
+    public ExpansionHubServo backL, backR, leftArm, rightArm;
+    private List<ExpansionHubMotor> driveMotors;
     private BNO055IMU imu;
     Orientation angles;
     Acceleration gravity;
@@ -50,6 +51,12 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         hub = hardwareMap.get(ExpansionHubEx.class, "hub");
         hub2 = hardwareMap.get(ExpansionHubEx.class, "hub2");
 
+        imu = LynxOptimizedI2cFactory.createLynxEmbeddedImu(hub2.getStandardModule(), 0);
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(parameters);
+
+        /**
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -61,56 +68,52 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         imu = hardwareMap.get(BNO055IMU.class, "imu 1");
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
+         */
 
         // TODO: if your hub is mounted vertically, remap the IMU axes so that the z-axis points
         // upward (normal to the floor) using a command like the following:
-        BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
+        //BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
-        leftFront = hardwareMap.get(ExpansionHubMotor.class, "lf");
-        leftRear = hardwareMap.get(ExpansionHubMotor.class, "lb");
-        rightRear = hardwareMap.get(ExpansionHubMotor.class, "rb");
-        rightFront = hardwareMap.get(ExpansionHubMotor.class, "rf");
+        LF = hardwareMap.get(ExpansionHubMotor.class, "lf");
+        LB = hardwareMap.get(ExpansionHubMotor.class, "lb");
+        RB = hardwareMap.get(ExpansionHubMotor.class, "rb");
+        RF = hardwareMap.get(ExpansionHubMotor.class, "rf");
 
         backL = hardwareMap.get(ExpansionHubServo.class, "bl");
         backR = hardwareMap.get(ExpansionHubServo.class, "br");
         leftArm = hardwareMap.get(ExpansionHubServo.class, "lcoll");
         rightArm = hardwareMap.get(ExpansionHubServo.class, "rcoll");
 
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        driveMotors = Arrays.asList(LF, LB, RB, RF);
 
-        for (ExpansionHubMotor motor : motors) {
+        for (ExpansionHubMotor motor : driveMotors) {
             // TODO: decide whether or not to use the built-in velocity PID
             // if you keep it, then don't tune kStatic or kA
             // otherwise, comment out the following line
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
 
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        LF.setDirection(DcMotorSimple.Direction.REVERSE);
+        RB.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: set the tuned coefficients from DriveVelocityPIDTuner if using RUN_USING_ENCODER
-        // setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, ...);
+        setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDCoefficients(20,5,2));
 
-        PIDCoefficients coeffs = new PIDCoefficients(9, 0.5, 7);
-
-        setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, coeffs);
-
-        // TODO: if desired, use setLocalizer() to change the localization method
-        // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
     }
 
     @Override
     public PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode) {
-        PIDFCoefficients coefficients = leftFront.getPIDFCoefficients(runMode);
+        PIDFCoefficients coefficients = LF.getPIDFCoefficients(runMode);
         return new PIDCoefficients(coefficients.p, coefficients.i, coefficients.d);
     }
 
     @Override
     public void setPIDCoefficients(DcMotor.RunMode runMode, PIDCoefficients coefficients) {
-        for (ExpansionHubMotor motor : motors) {
+        for (ExpansionHubMotor motor : driveMotors) {
             motor.setPIDFCoefficients(runMode, new PIDFCoefficients(
                     coefficients.kP, coefficients.kI, coefficients.kD, 1
             ));
@@ -127,7 +130,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
 
         List<Double> wheelPositions = new ArrayList<>();
-        for (ExpansionHubMotor motor : motors) {
+        for (ExpansionHubMotor motor : driveMotors) {
             wheelPositions.add(encoderTicksToInches(bulkData.getMotorCurrentPosition(motor)));
         }
         return wheelPositions;
@@ -135,10 +138,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        LF.setPower(v);
+        LB.setPower(v1);
+        RB.setPower(v2);
+        RF.setPower(v3);
     }
 
     @Override
