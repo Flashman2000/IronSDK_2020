@@ -20,36 +20,14 @@ public class DriverOp extends LinearOpMode {
 
         robot.initTele(hardwareMap);
 
-        boolean blue = false;
-        boolean red = false;
+        boolean heartbeat = false;
+        boolean strobe = false;
 
         ElapsedTime time = new ElapsedTime();
-        String alliance = "";
 
-        telemetry.addLine("Side? Start for Blue. Back for Red");
-        telemetry.update();
+        robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE);
 
-        while(!blue && !red) {
-            if (gamepad1.start) {
-                blue = true;
-            }
-            if (gamepad1.back) {
-                red = true;
-            }
-        }
-        telemetry.clearAll();
-
-        if(blue){
-            robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_OCEAN_PALETTE);
-            alliance = "Blue";
-        }
-        if(red){
-            robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_LAVA_PALETTE);
-            alliance = "Red";
-        }
-
-        telemetry.addData("Ready to go. Selected alliance", alliance);
-        telemetry.update();
+        telemetry.addLine("Ready");
 
         waitForStart();
 
@@ -64,14 +42,17 @@ public class DriverOp extends LinearOpMode {
             //telemetry.addData("Time", time.time());
             //telemetry.update();
 
-            if(time.time() >= 100 && blue){
-                robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_BLUE);
-            }
-            if(time.time() >= 100 & red){
+            if(time.time() >= 100 && !heartbeat && !strobe){
                 robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED);
+                heartbeat = true;
+                strobe = true;
             }
-            if(time.time() >= 120){
+            if(time.time() >= 110 && heartbeat && strobe){
+                robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.STROBE_RED);
+            }
+            if(time.time() >= 120 ){
                 robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE);
+                strobe = false;
             }
 
             if(gamepad2.dpad_left){
