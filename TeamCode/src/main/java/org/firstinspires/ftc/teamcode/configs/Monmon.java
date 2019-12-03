@@ -131,7 +131,7 @@ public class Monmon extends Monmon_Config{
 
 
         LF.setDirection(DcMotorSimple.Direction.REVERSE);
-        RB.setDirection(DcMotorSimple.Direction.REVERSE);
+        RF.setDirection(DcMotorSimple.Direction.REVERSE);
 
         rColl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lColl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
