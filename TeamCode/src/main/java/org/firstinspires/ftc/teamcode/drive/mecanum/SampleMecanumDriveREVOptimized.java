@@ -30,6 +30,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.IronCV.IronCVDetectorClass;
+import org.firstinspires.ftc.teamcode.drive.localizer.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.util.Line;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 import org.firstinspires.ftc.teamcode.util.LynxOptimizedI2cFactory;
 import org.firstinspires.ftc.teamcode.util.MecanumPowers;
@@ -58,7 +60,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
     public IronCVDetectorClass detector = new IronCVDetectorClass();
 
-    public SampleMecanumDriveREVOptimized(HardwareMap hardwareMap) {
+    public SampleMecanumDriveREVOptimized(HardwareMap hardwareMap, boolean auto) {
         super();
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
@@ -69,7 +71,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         hub = hardwareMap.get(ExpansionHubEx.class, "hub");
         hub2 = hardwareMap.get(ExpansionHubEx.class, "hub2");
 
-        imu = LynxOptimizedI2cFactory.createLynxEmbeddedImu(hub2.getStandardModule(), 0);
+        imu = hardwareMap.get(BNO055IMU.class, "imu 1");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
@@ -139,7 +141,11 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
-        detector.camSetup(hardwareMap);
+        //setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+
+        if(auto) {
+            detector.camSetup(hardwareMap);
+        }
     }
 
     @Override
@@ -376,8 +382,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
     }
 
-    public void fwdWithEncoder(double pwr, int pulses){
-        while(LF.getCurrentPosition() < pulses){
+    public void fwdWithEncoder(double pwr, int pulses, LinearOpMode opmode){
+        while(LF.getCurrentPosition() < pulses && opmode.opModeIsActive()){
             correction = checkDirection(GAIN);
             LF.setPower(pwr - correction);
             LB.setPower(pwr + correction);
@@ -386,8 +392,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
     }
 
-    public void fwdWithEncoderNoCorrect(double pwr, int pulses){
-        while(LF.getCurrentPosition() < pulses){
+    public void fwdWithEncoderNoCorrect(double pwr, int pulses, LinearOpMode opmode){
+        while(LF.getCurrentPosition() < pulses && opmode.opModeIsActive()){
             LF.setPower(pwr);
             LB.setPower(pwr);
             RF.setPower(pwr);
@@ -405,8 +411,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         killAll();
     }
 
-    public void bckWithEncoder(double pwr, int pulses){
-        while(LF.getCurrentPosition() > -pulses){
+    public void bckWithEncoder(double pwr, int pulses, LinearOpMode opmode){
+        while(LF.getCurrentPosition() > -pulses && opmode.opModeIsActive()){
             correction = checkDirection(GAIN);
             LF.setPower(-pwr - correction);
             LB.setPower(-pwr + correction);
@@ -527,7 +533,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
     public void primeBack(){
         backL.setPosition(0.6);
-        backR.setPosition(0.4);
+        backR.setPosition(0.6);
     }
 
     public void clampBack(){
@@ -566,7 +572,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         return correction;
     }
 
-    public void turnLeftGyro(double target, LinearOpMode opmode) {
+    public void turnLeftGyro(double target, LinearOpMode opmode, Telemetry telemetry) {
 
         if(target > 0) {
             while (imu.getAngularOrientation().firstAngle < target && opmode.opModeIsActive()) {
@@ -576,6 +582,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
                 LB.setPower(pwr);
                 RF.setPower(-pwr);
                 RB.setPower(pwr);
+                telemetry.addData("Heading", imu.getAngularOrientation().firstAngle);
+                telemetry.update();
             }
             killAll();
         }
@@ -735,7 +743,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         turnSync(Math.toRadians(angle), RF, LB);
     }
 
-    public void alignSkystone(String orientation){
+    public void alignSkystone(String orientation, LinearOpMode opmde){
 
         //vals are stored in 1, 0, 2 from left to right
 
@@ -754,7 +762,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             }
             killAll();
             resetEncoders();
-            bckWithEncoder(0.6, 80);
+            bckWithEncoder(0.6, 80, opmde);
             killAll();
             resetEncoders();
 
@@ -772,7 +780,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             }
             killAll();
             resetEncoders();
-            fwdWithEncoder(0.6, 80);
+            fwdWithEncoder(0.6, 80, opmde);
             killAll();
             resetEncoders();
         }
@@ -789,7 +797,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             }
             killAll();
             resetEncoders();
-            fwdWithEncoder(0.6, 120);
+            fwdWithEncoder(0.6, 120, opmde);
             killAll();
             resetEncoders();
         }

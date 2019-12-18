@@ -17,7 +17,7 @@ public class RR_Test extends LinearOpMode {
     String SkyStoneLocation;
     @Override
     public void runOpMode() throws InterruptedException{
-        SampleMecanumDriveREVOptimized drive = new SampleMecanumDriveREVOptimized(hardwareMap);
+        SampleMecanumDriveREVOptimized drive = new SampleMecanumDriveREVOptimized(hardwareMap, true);
 
         drive.primeBack();
         drive.releaseFront();
@@ -27,6 +27,8 @@ public class RR_Test extends LinearOpMode {
         waitForStart();
 
         SkyStoneLocation = drive.detectSkystone();
+
+        //drive.set
 
         //drive.alignSkystone(SkyStoneLocation);
         if(SkyStoneLocation == "Left") {

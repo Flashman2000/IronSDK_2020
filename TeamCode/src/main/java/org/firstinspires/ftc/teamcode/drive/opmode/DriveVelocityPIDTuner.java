@@ -134,7 +134,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        drive = new SampleMecanumDriveREVOptimized(hardwareMap);
+        drive = new SampleMecanumDriveREVOptimized(hardwareMap, false);
 
         addPidVariable();
 

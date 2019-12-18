@@ -25,7 +25,8 @@ public class DriverOpBL extends LinearOpMode {
     @Override
     public void runOpMode(){
 
-        robot = new SampleMecanumDriveREVOptimized(hardwareMap);
+        robot = new SampleMecanumDriveREVOptimized(hardwareMap, false);
+        //robot.detector.webcam.stopStreaming();
 
         boolean heartbeat = false;
         boolean strobe = false;
@@ -39,6 +40,8 @@ public class DriverOpBL extends LinearOpMode {
 
 
         waitForStart();
+
+        robot.turner.setPosition(1);
 
         time.reset();
         time.startTimeNanoseconds();
@@ -101,6 +104,99 @@ public class DriverOpBL extends LinearOpMode {
                 headingAdjust = true;
             }
 
+            double spoolpowr = gamepad2.right_trigger - gamepad2.left_trigger;
+            robot.spool.setPower(spoolpowr);
+
+            if(gamepad1.left_stick_button){
+                robot.spacer.setPosition(1);
+            }
+            if(gamepad1.right_stick_button){
+                robot.spacer.setPosition(0.7);
+            }
+
+            if(gamepad1.a){
+                robot.backL.setPosition(0);
+                robot.backR.setPosition(0);
+            }
+            if(gamepad1.b){
+                robot.backL.setPosition(1);
+                robot.backR.setPosition(1);
+            }
+
+            if(gamepad1.y){
+
+                robot.leftArm.setPosition(0);
+                robot.rightArm.setPosition(1);
+
+            }
+
+            if(gamepad1.x){
+
+                robot.leftArm.setPosition(1);
+                robot.rightArm.setPosition(0);
+
+            }
+
+            if(gamepad1.right_bumper){
+                robot.lColl.setPower(-0.7);
+                robot.rColl.setPower(0.7);
+            }
+
+            if(gamepad1.left_bumper){
+                robot.lColl.setPower(0);
+                robot.rColl.setPower(0);
+                robot.spacer.setPosition(1);
+            }
+
+            if(gamepad1.left_trigger > 0){
+                robot.lColl.setPower(0.3);
+                robot.rColl.setPower(-0.3);
+            }
+
+            if(gamepad1.dpad_left){
+                robot.followTrajectorySync(
+                        robot.trajectoryBuilder()
+                                .strafeLeft(1.5)
+                                .build()
+                );
+            }
+
+            if(gamepad1.dpad_right){
+                robot.followTrajectorySync(
+                        robot.trajectoryBuilder()
+                        .strafeRight(1.5)
+                        .build()
+                );
+            }
+
+            if(gamepad1.dpad_up){
+                robot.followTrajectorySync(
+                        robot.trajectoryBuilder()
+                                .forward(1.5)
+                                .build()
+                );
+            }
+
+            if(gamepad1.dpad_down){
+                robot.followTrajectorySync(
+                        robot.trajectoryBuilder()
+                                .back(1.5)
+                                .build()
+                );
+
+            }
+
+            if (gamepad2.a){
+
+                robot.grabber.setPosition(1);
+
+            }
+
+            if(gamepad2.b){
+
+                robot.grabber.setPosition(0);
+
+            }
 
             if(gamepad2.dpad_left){
                 robot.turner.setPosition(0);
