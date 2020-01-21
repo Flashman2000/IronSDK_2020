@@ -49,7 +49,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     private ExpansionHubEx hub2;
     public ExpansionHubMotor LF, LB, RB, RF;
     public DcMotor lColl, rColl, spool;
-    public Servo backL, backR, leftArm, rightArm, grabber, turner, spacer, frontYk, backYk;
+    public Servo backs, leftArm, rightArm, grabber, turner, spacer, frontYk, backYk;
     public RevBlinkinLedDriver blinkinLedDriver;
     private List<ExpansionHubMotor> driveMotors;
     public BNO055IMU imu;
@@ -103,8 +103,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         rColl = hardwareMap.get(DcMotor.class, "rc");
         spool = hardwareMap.get(DcMotor.class, "spool");
 
-        backL = hardwareMap.get(ExpansionHubServo.class, "bl");
-        backR = hardwareMap.get(ExpansionHubServo.class, "br");
+        backs = hardwareMap.get(ExpansionHubServo.class, "backs");
         leftArm = hardwareMap.get(ExpansionHubServo.class, "lcoll");
         rightArm = hardwareMap.get(ExpansionHubServo.class, "rcoll");
 
@@ -244,12 +243,10 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
 
         if(gamepad1.a){
-            backL.setPosition(0);
-            backR.setPosition(0);
+            backs.setPosition(0);
         }
         if(gamepad1.b){
-            backL.setPosition(1);
-            backR.setPosition(1);
+            backs.setPosition(1);
         }
 
         if(gamepad1.y){
@@ -511,8 +508,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     }
 
     public void primeServo(){
-        frontYk.setPosition(0.7);
-        backYk.setPosition(0.2);
+        frontYk.setPosition(0.2);
+        backYk.setPosition(0.7);
     }
 
     public void grabFront(){
@@ -532,18 +529,15 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     }
 
     public void primeBack(){
-        backL.setPosition(0.6);
-        backR.setPosition(0.6);
+        backs.setPosition(0.6);
     }
 
     public void clampBack(){
-        backL.setPosition(0.1);
-        backR.setPosition(0);
+        backs.setPosition(0);
     }
 
     public void unclampBack(){
-        backL.setPosition(1);
-        backR.setPosition(1);
+        backs.setPosition(1);
     }
 
     public void setMaintainedHeading(double heading){

@@ -22,6 +22,10 @@ public class DriverOpBL extends LinearOpMode {
 
     boolean headingAdjust = true;
 
+    public static final double OUTSIDE = 0;
+    public static final double INSIDE = 1;
+
+
     @Override
     public void runOpMode(){
 
@@ -41,7 +45,7 @@ public class DriverOpBL extends LinearOpMode {
 
         waitForStart();
 
-        robot.turner.setPosition(1);
+        robot.turner.setPosition(INSIDE);
 
         time.reset();
         time.startTimeNanoseconds();
@@ -115,12 +119,10 @@ public class DriverOpBL extends LinearOpMode {
             }
 
             if(gamepad1.a){
-                robot.backL.setPosition(0);
-                robot.backR.setPosition(0);
+                robot.backs.setPosition(0);
             }
             if(gamepad1.b){
-                robot.backL.setPosition(1);
-                robot.backR.setPosition(1);
+                robot.backs.setPosition(1);
             }
 
             if(gamepad1.y){
@@ -145,7 +147,8 @@ public class DriverOpBL extends LinearOpMode {
             if(gamepad1.left_bumper){
                 robot.lColl.setPower(0);
                 robot.rColl.setPower(0);
-                robot.spacer.setPosition(1);
+                robot.spacer.setPosition(1
+                );
             }
 
             if(gamepad1.left_trigger > 0){
@@ -199,11 +202,11 @@ public class DriverOpBL extends LinearOpMode {
             }
 
             if(gamepad2.dpad_left){
-                robot.turner.setPosition(0);
+                robot.turner.setPosition(OUTSIDE);
             }
 
             if(gamepad2.dpad_right){
-                robot.turner.setPosition(1);
+                robot.turner.setPosition(INSIDE);
             }
 
             if(gamepad2.left_bumper){
@@ -224,6 +227,30 @@ public class DriverOpBL extends LinearOpMode {
                     robot.teleActivity(gamepad1, gamepad2);
                     sleep(100);
                 }
+            }
+
+            if(gamepad2.left_stick_y < 0){
+
+
+                while(gamepad2.left_stick_y < 0) {
+                    robot.LF.setPower(-gamepad2.left_stick_y*-0.3);
+                    robot.LB.setPower(-gamepad2.left_stick_y*0.3);
+                    robot.RF.setPower(-gamepad2.left_stick_y*0.3);
+                    robot.RB.setPower(-gamepad2.left_stick_y*-0.3);
+                }
+                robot.killAll();
+            }
+
+            if(gamepad2.left_stick_y > 0){
+
+                while(gamepad2.left_stick_y > 0) {
+                    robot.LF.setPower(gamepad2.left_stick_y*0.3);
+                    robot.LB.setPower(gamepad2.left_stick_y*-0.3);
+                    robot.RF.setPower(gamepad2.left_stick_y*-0.3);
+                    robot.RB.setPower(gamepad2.left_stick_y*0.3);
+                }
+                robot.killAll();
+
             }
 
 

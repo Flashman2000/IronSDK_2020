@@ -109,12 +109,10 @@ public class DriverOpRD extends LinearOpMode {
             }
 
             if(gamepad1.a){
-                robot.backL.setPosition(0);
-                robot.backR.setPosition(0);
+                robot.backs.setPosition(0);
             }
             if(gamepad1.b){
-                robot.backL.setPosition(1);
-                robot.backR.setPosition(1);
+                robot.backs.setPosition(1);
             }
 
             if(gamepad1.y){
