@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
 import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.configs.Field_Locations;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
@@ -164,6 +165,65 @@ public class New_Blue extends LinearOpMode {
             );
 
             drive.turnTo(90);
+
+            drive.setPoseEstimate(new Pose2d(50, 28, drive.imu.getAngularOrientation().firstAngle));
+
+            drive.relayPose(telemetry, drive);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                    .back(5)
+                    .build()
+            );
+
+            //TODO: clamp code
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                    .forward(10)
+                    .build()
+            );
+
+            drive.turnLeftGyro(Math.toRadians(90), this, telemetry);
+
+            boolean positive = true;
+            boolean arm = false;
+            while (drive.imu.getAngularOrientation().firstAngle != 180 && positive && opModeIsActive()){
+
+                if(drive.imu.getAngularOrientation().firstAngle >= -180 && drive.imu.getAngularOrientation().firstAngle < 0){
+                    positive = false;
+                }
+
+                //State machine for simultaneous action
+                if(drive.imu.getAngularOrientation().firstAngle > 120 && !arm){
+                    //TODO: drop front arm
+                    arm = true;
+                }
+
+                drive.LF.setPower(-0.8);
+                drive.LB.setPower(0.8);
+                drive.RF.setPower(-0.8);
+                drive.RB.setPower(0.8);
+            }
+            drive.killAll();
+
+            //TODO: unclamp code
+
+            //TODO: drop front wheels
+
+            drive.relayPose(telemetry, drive);
+
+            //TODO: set new pose after empirical analysis
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                    .lineTo(new Vector2d(36,36), new LinearInterpolator(0, 180))
+                    .build()
+            );
+
+            //TODO: raise front arm
+
+            //TODO: tape measure code
 
             sleep(1000);
 

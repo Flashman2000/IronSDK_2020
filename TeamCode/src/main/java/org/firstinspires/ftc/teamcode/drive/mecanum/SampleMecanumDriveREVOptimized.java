@@ -813,4 +813,13 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
     }
 
+    public void relayPose(Telemetry telemetry, SampleMecanumDriveREVOptimized robot){
+
+        telemetry.addData("X", robot.getPoseEstimate().getX());
+        telemetry.addData("Y", robot.getPoseEstimate().getY());
+        telemetry.addData("Heading", robot.getPoseEstimate().getHeading());
+        telemetry.update();
+
+    }
+
 }
