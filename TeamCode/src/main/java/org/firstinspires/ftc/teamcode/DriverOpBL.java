@@ -22,8 +22,8 @@ public class DriverOpBL extends LinearOpMode {
 
     boolean headingAdjust = true;
 
-    public static final double OUTSIDE = 0;
-    public static final double INSIDE = 1;
+    public static final double OUTSIDE = 0.71;
+    public static final double INSIDE = 0;
 
 
     @Override
@@ -38,6 +38,8 @@ public class DriverOpBL extends LinearOpMode {
         ElapsedTime time = new ElapsedTime();
 
         robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE);
+
+        double startingAngle = robot.getExternalHeading();
 
         robot.primeServo();
         telemetry.addLine("Ready");
@@ -111,13 +113,6 @@ public class DriverOpBL extends LinearOpMode {
             double spoolpowr = gamepad2.right_trigger - gamepad2.left_trigger;
             robot.spool.setPower(spoolpowr);
 
-            if(gamepad1.left_stick_button){
-                robot.spacer.setPosition(1);
-            }
-            if(gamepad1.right_stick_button){
-                robot.spacer.setPosition(0.7);
-            }
-
             if(gamepad1.a){
                 robot.backs.setPosition(0);
             }
@@ -147,8 +142,6 @@ public class DriverOpBL extends LinearOpMode {
             if(gamepad1.left_bumper){
                 robot.lColl.setPower(0);
                 robot.rColl.setPower(0);
-                robot.spacer.setPosition(1
-                );
             }
 
             if(gamepad1.left_trigger > 0){
@@ -210,33 +203,21 @@ public class DriverOpBL extends LinearOpMode {
             }
 
             if(gamepad2.left_bumper){
-                robot.i = robot.turner.getPosition();
-                while(robot.i > 0 && opModeIsActive()){
-                    robot.i = robot.i - 0.05;
-                    robot.turner.setPosition(robot.i);
-                    robot.teleActivity(gamepad1, gamepad2);
-                    sleep(100);
-                }
+                robot.cap.setPosition(0.5);
             }
 
             if (gamepad2.right_bumper){
-                robot.i = robot.turner.getPosition();
-                while(robot.i < 1 && opModeIsActive()) {
-                    robot.i = robot.i + 0.05;
-                    robot.turner.setPosition(robot.i);
-                    robot.teleActivity(gamepad1, gamepad2);
-                    sleep(100);
-                }
+                robot.cap.setPosition(1);
             }
 
             if(gamepad2.left_stick_y < 0){
 
 
                 while(gamepad2.left_stick_y < 0) {
-                    robot.LF.setPower(-gamepad2.left_stick_y*-0.3);
-                    robot.LB.setPower(-gamepad2.left_stick_y*0.3);
-                    robot.RF.setPower(-gamepad2.left_stick_y*0.3);
-                    robot.RB.setPower(-gamepad2.left_stick_y*-0.3);
+                    robot.LF.setPower(-gamepad2.left_stick_y*-0.2);
+                    robot.LB.setPower(-gamepad2.left_stick_y*0.2);
+                    robot.RF.setPower(-gamepad2.left_stick_y*0.2);
+                    robot.RB.setPower(-gamepad2.left_stick_y*-0.2);
                 }
                 robot.killAll();
             }
@@ -244,10 +225,10 @@ public class DriverOpBL extends LinearOpMode {
             if(gamepad2.left_stick_y > 0){
 
                 while(gamepad2.left_stick_y > 0) {
-                    robot.LF.setPower(gamepad2.left_stick_y*0.3);
-                    robot.LB.setPower(gamepad2.left_stick_y*-0.3);
-                    robot.RF.setPower(gamepad2.left_stick_y*-0.3);
-                    robot.RB.setPower(gamepad2.left_stick_y*0.3);
+                    robot.LF.setPower(gamepad2.left_stick_y*0.2);
+                    robot.LB.setPower(gamepad2.left_stick_y*-0.2);
+                    robot.RF.setPower(gamepad2.left_stick_y*-0.2);
+                    robot.RB.setPower(gamepad2.left_stick_y*0.2);
                 }
                 robot.killAll();
 

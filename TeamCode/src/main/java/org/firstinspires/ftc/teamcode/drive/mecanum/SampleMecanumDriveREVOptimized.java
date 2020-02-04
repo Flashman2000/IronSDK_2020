@@ -49,7 +49,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     private ExpansionHubEx hub2;
     public ExpansionHubMotor LF, LB, RB, RF;
     public DcMotor lColl, rColl, spool;
-    public Servo backs, leftArm, rightArm, grabber, turner, spacer, frontYk, backYk;
+    public Servo backs, leftArm, rightArm, grabber, turner, frontYkA, backYkA, frontYk, backYk, cap;
     public RevBlinkinLedDriver blinkinLedDriver;
     private List<ExpansionHubMotor> driveMotors;
     public BNO055IMU imu;
@@ -109,10 +109,13 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         grabber = hardwareMap.get(ExpansionHubServo.class, "grab");
         turner = hardwareMap.get(ExpansionHubServo.class, "turn");
-        spacer = hardwareMap.get(ExpansionHubServo.class, "spacer");
+        cap = hardwareMap.get(ExpansionHubServo.class, "cap");
+        //spacer = hardwareMap.get(ExpansionHubServo.class, "spacer");
 
         frontYk = hardwareMap.get(ExpansionHubServo.class, "frntyk");
         backYk = hardwareMap.get(ExpansionHubServo.class, "bckyk");
+        frontYkA = hardwareMap.get(ExpansionHubServo.class, "frntyka");
+        backYkA = hardwareMap.get(ExpansionHubServo.class, "backyka");
 
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
 
@@ -235,13 +238,6 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         LB.setPower(lbpwr);
         spool.setPower(spoolpowr);
 
-        if(gamepad1.left_stick_button){
-            spacer.setPosition(0);
-        }
-        if(gamepad1.right_stick_button){
-            spacer.setPosition(0.35);
-        }
-
         if(gamepad1.a){
             backs.setPosition(0);
         }
@@ -271,7 +267,6 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         if(gamepad1.left_bumper){
             lColl.setPower(0);
             rColl.setPower(0);
-            spacer.setPosition(0.35);
         }
 
         if(gamepad1.left_trigger > 0){
@@ -797,4 +792,25 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
 
     }
+
+    public void moveGrab(String status, LinearOpMode opmode){
+
+        if(status == "Grab"){
+            backYkA.setPosition(1);
+            opmode.sleep(200);
+            backYk.setPosition(0);
+            opmode.sleep(200);
+            backYkA.setPosition(0.5);
+        }
+
+        if(status == "Drop"){
+            backYkA.setPosition(1);
+            opmode.sleep(200);
+            backYk.setPosition(0);
+            opmode.sleep(200);
+            backYkA.setPosition(0.5);
+        }
+
+    }
+
 }

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimiz
 /*
  * This is a simple routine to test translational drive capabilities.
  */
-@Config
+//@Config
 @Autonomous(group = "drive")
 public class StraightTest extends LinearOpMode {
     public static double DISTANCE = 48;

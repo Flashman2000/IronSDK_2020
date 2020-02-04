@@ -101,12 +101,6 @@ public class DriverOpRD extends LinearOpMode {
             double spoolpowr = gamepad2.right_trigger - gamepad2.left_trigger;
             robot.spool.setPower(spoolpowr);
 
-            if(gamepad1.left_stick_button){
-                robot.spacer.setPosition(1);
-            }
-            if(gamepad1.right_stick_button){
-                robot.spacer.setPosition(0.7);
-            }
 
             if(gamepad1.a){
                 robot.backs.setPosition(0);
@@ -137,7 +131,6 @@ public class DriverOpRD extends LinearOpMode {
             if(gamepad1.left_bumper){
                 robot.lColl.setPower(0);
                 robot.rColl.setPower(0);
-                robot.spacer.setPosition(1);
             }
 
             if(gamepad1.left_trigger > 0){

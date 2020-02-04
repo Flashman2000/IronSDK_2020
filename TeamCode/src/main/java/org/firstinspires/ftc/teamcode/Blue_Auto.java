@@ -35,6 +35,7 @@ public class Blue_Auto extends LinearOpMode {
 
             robot.strafeRightWithEnc(0.6, 1832, this);
             robot.killAll();
+
             robot.resetEncoders();
             robot.bckWithEncoder(0.6, 80, this);
             robot.killAll();
