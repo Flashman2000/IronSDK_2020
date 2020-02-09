@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 import org.firstinspires.ftc.teamcode.util.MecanumPowers;
 import org.firstinspires.ftc.teamcode.util.MecanumUtil;
+import org.openftc.revextensions2.ExpansionHubEx;
 
 @TeleOp(name = "Teleop Facing Right")
 public class DriverOpBL extends LinearOpMode {
@@ -34,6 +35,7 @@ public class DriverOpBL extends LinearOpMode {
 
         boolean heartbeat = false;
         boolean strobe = false;
+        double voltage;
 
         ElapsedTime time = new ElapsedTime();
 
@@ -41,13 +43,17 @@ public class DriverOpBL extends LinearOpMode {
 
         double startingAngle = robot.getExternalHeading();
 
-        robot.primeServo();
+        //robot.primeServo();
         telemetry.addLine("Ready");
-
+            //Pepega Clap 777 Oi 3Head ANY BRUVS?
 
         waitForStart();
 
         robot.turner.setPosition(INSIDE);
+        robot.backYk.setPosition(0);
+        robot.backYkA.setPosition(0.1);
+        robot.frontYk.setPosition(0.5);
+        robot.frontYkA.setPosition(0.75);
 
         time.reset();
         time.startTimeNanoseconds();
@@ -57,6 +63,20 @@ public class DriverOpBL extends LinearOpMode {
 
             //telemetry.addData("Time", time.time());
             //telemetry.update();
+
+            voltage = robot.hub.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS);
+            if(voltage < 12.55){
+                telemetry.addData("Voltage", voltage);
+                telemetry.addLine("Voltage has reached critically low levels");
+                telemetry.update();
+            }
+            if(voltage >= 12.55){
+                telemetry.addData("Voltage", voltage);
+                telemetry.addLine("Voltage is okay");
+                telemetry.update();
+            }
+
+
 
             if(time.time() >= 100 && !heartbeat && !strobe){
                 robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED);

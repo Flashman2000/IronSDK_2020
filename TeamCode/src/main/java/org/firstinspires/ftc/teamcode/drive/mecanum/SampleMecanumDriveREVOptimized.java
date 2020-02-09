@@ -45,8 +45,8 @@ import org.openftc.revextensions2.RevBulkData;
  * trajectory following performance with moderate additional complexity.
  */
 public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
-    private ExpansionHubEx hub;
-    private ExpansionHubEx hub2;
+    public ExpansionHubEx hub;
+    public ExpansionHubEx hub2;
     public ExpansionHubMotor LF, LB, RB, RF;
     public DcMotor lColl, rColl, spool;
     public Servo backs, leftArm, rightArm, grabber, turner, frontYkA, backYkA, frontYk, backYk, cap;
@@ -149,6 +149,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             detector.camSetup(hardwareMap);
         }
     }
+
 
     @Override
     public PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode) {

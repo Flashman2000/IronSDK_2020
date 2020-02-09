@@ -1,30 +1,32 @@
 package org.firstinspires.ftc.teamcode;
 
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.path.heading.ConstantInterpolator;
-import com.acmerobotics.roadrunner.path.heading.LinearInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.configs.Field_Locations;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
-import org.firstinspires.ftc.teamcode.util.Pose;
-import org.opencv.core.Mat;
+import org.openftc.revextensions2.ExpansionHubEx;
+
+import java.text.Format;
 
 @Autonomous
-public class New_Blue extends LinearOpMode {
+public class new_blue2 extends LinearOpMode {
 
     String SkystoneLocation;
-    String grab = "Grab";
-    String drop = "Drop";
+
+    //boolean highVoltage = false;
 
     @Override
     public void runOpMode() throws InterruptedException{
 
         SampleMecanumDriveREVOptimized drive = new SampleMecanumDriveREVOptimized(hardwareMap, true);
 
+        double voltage = drive.hub.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS);
+        double voltage2 = drive.hub2.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS);
 
         Field_Locations locations = new Field_Locations();
 
@@ -33,6 +35,19 @@ public class New_Blue extends LinearOpMode {
         drive.frontYkA.setPosition(0.75);
 
         telemetry.addLine("Ready");
+        telemetry.addData("Voltage 1", voltage);
+        if(voltage < 13.35){
+            telemetry.addLine("CRITICAL WARNING:");
+            telemetry.addLine("VOLTAGE IS TOO LOW, EXPECT INSTABILITY");
+            telemetry.addLine("13.6 IS OPTIMAL VOLTAGE");
+        }
+
+        if(voltage > 13.8){
+            telemetry.addLine("CRITICAL WARNING:");
+            telemetry.addLine("VOLTAGE IS TOO DAMN HIGH, EXPECT INSTABILITY");
+            telemetry.addLine("13.6 IS OPTIMAL VOLTAGE");
+        }
+
         telemetry.update();
 
         waitForStart();
@@ -44,21 +59,25 @@ public class New_Blue extends LinearOpMode {
         telemetry.addData("Location", SkystoneLocation);
         telemetry.update();
 
-        if(SkystoneLocation == "Left" || SkystoneLocation =="NOT FOUND") {
+        if(SkystoneLocation == "Left" || SkystoneLocation == "NOT FOUND"){
+            //97
 
             drive.backYkA.setPosition(0.6);
             drive.backYk.setPosition(0.5);
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .lineTo(locations.blueSkystone4V, FACING_LZ)
+                            .back(6)
+                            .strafeRight(37.5)
                             .build()
             );
+
+            double offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(-offset, drive.RF, drive.LB);
 
             drive.setPoseEstimate(locations.blueSkystone4P);
 
             //TODO: add grab code
-
             drive.backYkA.setPosition(1);
             sleep(200);
             drive.backYk.setPosition(0);
@@ -68,252 +87,110 @@ public class New_Blue extends LinearOpMode {
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                    .lineTo(locations.bluePassingVector, FACING_LZ)
-                    .lineTo(locations.blueFoundationPlate1V, FACING_LZ)
+                    .strafeLeft(7.5)
                     .build()
             );
 
-            //TODO: add drop code
-
-            drive.backYkA.setPosition(1);
-            sleep(200);
-            drive.backYk.setPosition(0.6);
-            drive.frontYk.setPosition(0.5);
-            sleep(500);
-            drive.backYkA.setPosition(0.25);
-
-            double offset = drive.imu.getAngularOrientation().firstAngle;
-
-            drive.turnTo(Math.toRadians(0));
-
-            drive.setPoseEstimate(locations.blueFoundationPlate1P);
-
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                    .lineTo(locations.bluePassingVector1, FACING_LZ)
-                    .lineTo(locations.blueSkystone1V, FACING_LZ)
-                    .build()
-            );
-
-            drive.turnTo(Math.toRadians(0));
-
-            //TODO: add grab code
-
-
-            drive.backYkA.setPosition(1);
-            sleep(200);
-            drive.backYk.setPosition(0);
-            drive.frontYkA.setPosition(0.75);
-            sleep(800);
-            drive.backYkA.setPosition(0.25);
-
-            drive.backs.setPosition(1);
-
-            drive.setPoseEstimate(locations.blueSkystone1P);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.bluePassingVector1, FACING_LZ)
-                            .lineTo(locations.blueFoundationPlate2V, FACING_LZ)
+                            .forward(95)
                             .build()
             );
 
-            drive.turnTo(Math.toRadians(0));
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeRight(11)
+                            .build()
+            );
 
-            //TODO: add drop code
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
             drive.backYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(0.6);
+            drive.backYk.setPosition(0.7);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.2);
-
-            drive.setPoseEstimate(locations.blueFoundationPlate2P);
+            drive.backYkA.setPosition(0.25);
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                    .lineTo(locations.bluePlateGrabVector, FACING_LZ)
-                    .build()
+                            .strafeLeft(9)
+                            .build()
             );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .back(65)
+                            .build()
+            );
+
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeRight(5)
+                            .build()
+            );
+
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
+            drive.backYkA.setPosition(1);
+            sleep(200);
+            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.25);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeLeft(6)
+                            .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .forward(83)
+                            .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeRight(8.5)
+                            .build()
+            );
+
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
+            drive.backs.setPosition(1);
+
+            drive.backYkA.setPosition(1);
+            sleep(200);
+            drive.backYk.setPosition(0.7);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.25);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .back(5)
+                            .strafeLeft(5)
+                            .build()
+            );
+
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
 
             drive.turnTo(90);
 
-            drive.setPoseEstimate(new Pose2d(50, 28, drive.imu.getAngularOrientation().firstAngle));
-
-            drive.relayPose(telemetry, drive);
-
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                    .back(15)
-                    .build()
-            );
-
-            //TODO: clamp code
-            drive.backs.setPosition(0);
-            sleep(500);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                    .forward(22)
-                    .build()
-            );
-
-            while (drive.imu.getAngularOrientation().firstAngle < Math.toRadians(180) && drive.imu.getAngularOrientation().firstAngle > Math.toRadians(0) && opModeIsActive()) {
-                //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
-                //double pwr = Range.clip(Math.abs(0.011*(drive.imu.getAngularOrientation().firstAngle - Math.toRadians(180))), 0.3, 1);
-
-                if(drive.imu.getAngularOrientation().firstAngle > Math.toRadians(120)){
-                    drive.frontYkA.setPosition(0.5);
-                }
-
-                drive.LF.setPower(-0.7);
-                drive.LB.setPower(0.7);
-                drive.RF.setPower(-0.7);
-                drive.RB.setPower(0.7);
-                telemetry.addData("Heading", drive.imu.getAngularOrientation().firstAngle);
-                telemetry.update();
-            }
-            drive.killAll();
-
-
-            //TODO: unclamp code
-
-            drive.backs.setPosition(1);
-
-            //TODO: drop front wheels
-
-            drive.leftArm.setPosition(1);
-            drive.rightArm.setPosition(0);
-
-            drive.turnTo(180);
-
-            drive.frontYkA.setPosition(0.75);
-
-            drive.setPoseEstimate(new Pose2d(45, 48, Math.toRadians(179)));
-
-            drive.relayPose(telemetry, drive);
-
-            //TODO: set new pose after empirical analysis
-
-            //sleep(500000);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                    .strafeLeft(0.5)
-                    .forward(32)
-                    .build()
-            );
-
-            //TODO: raise front arm
-
-
-            //TODO: tape measure code
-
-            //sleep(1000);
-
-        }
-
-        if(SkystoneLocation == "Center"){
-
-            drive.backYkA.setPosition(0.6);
-            drive.backYk.setPosition(0.5);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.blueSkystone5V, FACING_LZ)
-                            .build()
-            );
-
-            drive.setPoseEstimate(locations.blueSkystone5P);
-
-            //TODO: add grab code
-
-            drive.backYkA.setPosition(1);
-            sleep(200);
-            drive.backYk.setPosition(0);
-            drive.frontYk.setPosition(0.5);
-            sleep(500);
-            drive.backYkA.setPosition(0.25);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.bluePassingVector, FACING_LZ)
-                            .lineTo(locations.blueFoundationPlate1V, FACING_LZ)
-                            .build()
-            );
-
-            //TODO: add drop code
-
-            drive.backYkA.setPosition(1);
-            sleep(200);
-            drive.backYk.setPosition(0.6);
-            drive.frontYk.setPosition(0.5);
-            sleep(500);
-            drive.backYkA.setPosition(0.25);
-
-            double offset = drive.imu.getAngularOrientation().firstAngle;
-
-            drive.turnTo(Math.toRadians(0));
-
-            drive.setPoseEstimate(locations.blueFoundationPlate1P);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.bluePassingVector1, FACING_LZ)
-                            .lineTo(locations.blueSkystone2V, FACING_LZ)
-                            .build()
-            );
-
-            drive.turnTo(Math.toRadians(0));
-
-            //TODO: add grab code
-
-
-            drive.backYkA.setPosition(1);
-            sleep(200);
-            drive.backYk.setPosition(0);
-            drive.frontYkA.setPosition(0.75);
-            sleep(800);
-            drive.backYkA.setPosition(0.25);
-
-            drive.backs.setPosition(1);
-
-            drive.setPoseEstimate(locations.blueSkystone2P);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.bluePassingVector1, FACING_LZ)
-                            .lineTo(locations.blueFoundationPlate2V, FACING_LZ)
-                            .build()
-            );
-
-            drive.turnTo(Math.toRadians(0));
-
-            //TODO: add drop code
-            drive.backYkA.setPosition(1);
-            sleep(200);
-            drive.backYk.setPosition(0.6);
-            drive.frontYk.setPosition(0.5);
-            sleep(500);
-            drive.backYkA.setPosition(0.2);
-
-            drive.setPoseEstimate(locations.blueFoundationPlate2P);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.bluePlateGrabVector, FACING_LZ)
-                            .build()
-            );
-
-            drive.turnTo(90);
-
-            drive.setPoseEstimate(new Pose2d(50, 28, drive.imu.getAngularOrientation().firstAngle));
-
-            drive.relayPose(telemetry, drive);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .back(15)
+                            .back(10)
                             .build()
             );
 
@@ -323,7 +200,7 @@ public class New_Blue extends LinearOpMode {
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .forward(22)
+                            .forward(20)
                             .build()
             );
 
@@ -354,11 +231,9 @@ public class New_Blue extends LinearOpMode {
             drive.leftArm.setPosition(1);
             drive.rightArm.setPosition(0);
 
-            drive.turnTo(180);
-
             drive.frontYkA.setPosition(0.75);
 
-            drive.setPoseEstimate(new Pose2d(45, 48, Math.toRadians(179)));
+            drive.setPoseEstimate(new Pose2d(45, -48, Math.toRadians(179)));
 
             drive.relayPose(telemetry, drive);
 
@@ -372,13 +247,6 @@ public class New_Blue extends LinearOpMode {
                             .forward(32)
                             .build()
             );
-
-            //TODO: raise front arm
-
-
-            //TODO: tape measure code
-
-            //sleep(1000);
 
         }
 
@@ -389,100 +257,140 @@ public class New_Blue extends LinearOpMode {
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .lineTo(locations.blueSkystone6V, FACING_LZ)
-                            .build()
+                    .back(22)
+                    .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                    .strafeRight(29)
+                    .build()
+
             );
 
             drive.setPoseEstimate(locations.blueSkystone6P);
-
-            //TODO: add grab code
-
-            drive.backYkA.setPosition(1);
-            sleep(200);
-            drive.backYk.setPosition(0);
-            drive.frontYk.setPosition(0.5);
-            sleep(500);
-            drive.backYkA.setPosition(0.25);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.bluePassingVector, FACING_LZ)
-                            .lineTo(locations.blueFoundationPlate1V, FACING_LZ)
-                            .build()
-            );
-
-            //TODO: add drop code
-
-            drive.backYkA.setPosition(1);
-            sleep(200);
-            drive.backYk.setPosition(0.6);
-            drive.frontYk.setPosition(0.5);
-            sleep(500);
-            drive.backYkA.setPosition(0.25);
-
             double offset = drive.imu.getAngularOrientation().firstAngle;
 
-            drive.turnTo(Math.toRadians(0));
+            drive.turnSync(-offset, drive.RF, drive.LB);
 
-            drive.setPoseEstimate(locations.blueFoundationPlate1P);
+            //TODO: add grab code
+            drive.backYkA.setPosition(1);
+            sleep(200);
+            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.25);
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .lineTo(locations.bluePassingVector1, FACING_LZ)
-                            .lineTo(locations.blueSkystone3V, FACING_LZ)
+                            .strafeLeft(5.5)
                             .build()
             );
 
-            drive.turnTo(Math.toRadians(0));
+            offset = drive.imu.getAngularOrientation().firstAngle;
 
-            //TODO: add grab code
+            drive.turnSync(-offset, drive.RF, drive.LB);
 
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .forward(112)
+                            .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeRight(9.5)
+                            .build()
+            );
+
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
+            drive.backYkA.setPosition(1);
+            sleep(200);
+            drive.backYk.setPosition(0.7);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.25);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeLeft(9)
+                            .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .back(85)
+                            .build()
+            );
+
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeRight(5.5)
+                            .build()
+            );
+
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
 
             drive.backYkA.setPosition(1);
             sleep(200);
             drive.backYk.setPosition(0);
-            drive.frontYkA.setPosition(0.75);
-            sleep(800);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
             drive.backYkA.setPosition(0.25);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeLeft(6)
+                            .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .forward(100)
+                            .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeRight(8.5)
+                            .build()
+            );
+
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
 
             drive.backs.setPosition(1);
 
-            drive.setPoseEstimate(locations.blueSkystone3P);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.bluePassingVector1, FACING_LZ)
-                            .lineTo(locations.blueFoundationPlate2V, FACING_LZ)
-                            .build()
-            );
-
-            drive.turnTo(Math.toRadians(0));
-
-            //TODO: add drop code
             drive.backYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(0.6);
+            drive.backYk.setPosition(0.7);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.2);
-
-            drive.setPoseEstimate(locations.blueFoundationPlate2P);
+            drive.backYkA.setPosition(0.25);
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .lineTo(locations.bluePlateGrabVector, FACING_LZ)
+                            .back(7)
+                            .strafeLeft(5)
                             .build()
             );
+
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
 
             drive.turnTo(90);
 
-            drive.setPoseEstimate(new Pose2d(50, 28, drive.imu.getAngularOrientation().firstAngle));
-
-            drive.relayPose(telemetry, drive);
-
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .back(15)
+                            .back(10)
                             .build()
             );
 
@@ -492,7 +400,7 @@ public class New_Blue extends LinearOpMode {
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .forward(22)
+                            .forward(18)
                             .build()
             );
 
@@ -523,11 +431,200 @@ public class New_Blue extends LinearOpMode {
             drive.leftArm.setPosition(1);
             drive.rightArm.setPosition(0);
 
-            drive.turnTo(180);
+            drive.frontYkA.setPosition(0.75);
+
+            drive.setPoseEstimate(new Pose2d(45, -48, Math.toRadians(179)));
+
+            drive.relayPose(telemetry, drive);
+
+            //TODO: set new pose after empirical analysis
+
+            //sleep(500000);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            //.strafeLeft(4)
+                            .forward(32)
+                            .build()
+            );
+
+        }
+
+        if(SkystoneLocation == "Center"){
+
+            drive.backYkA.setPosition(0.6);
+            drive.backYk.setPosition(0.5);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .back(10)
+                            .strafeRight(38)
+                            .build()
+            );
+
+            drive.setPoseEstimate(locations.blueSkystone5P);
+
+            double offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
+            //TODO: add grab code
+            drive.backYkA.setPosition(1);
+            sleep(200);
+            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.25);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeLeft(5.5)
+                            .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .forward(105)
+                            .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeRight(11)
+                            .build()
+            );
+
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
+            drive.backYkA.setPosition(1);
+            sleep(200);
+            drive.backYk.setPosition(0.7);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.25);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeLeft(9)
+                            .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .back(75)
+                            .build()
+            );
+
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeRight(5)
+                            .build()
+            );
+
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
+            drive.backYkA.setPosition(1);
+            sleep(200);
+            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.25);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeLeft(6)
+                            .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .forward(100)
+                            .build()
+            );
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .strafeRight(8.5)
+                            .build()
+            );
+
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
+            drive.backs.setPosition(1);
+
+            drive.backYkA.setPosition(1);
+            sleep(200);
+            drive.backYk.setPosition(0.7);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.25);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .back(5)
+                            .strafeLeft(5)
+                            .build()
+            );
+
+            offset = drive.imu.getAngularOrientation().firstAngle;
+
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
+            drive.turnTo(90);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .back(10)
+                            .build()
+            );
+
+            //TODO: clamp code
+            drive.backs.setPosition(0);
+            sleep(500);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .forward(20)
+                            .build()
+            );
+
+            while (drive.imu.getAngularOrientation().firstAngle < Math.toRadians(180) && drive.imu.getAngularOrientation().firstAngle > Math.toRadians(0) && opModeIsActive()) {
+                //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
+                //double pwr = Range.clip(Math.abs(0.011*(drive.imu.getAngularOrientation().firstAngle - Math.toRadians(180))), 0.3, 1);
+
+                if(drive.imu.getAngularOrientation().firstAngle > Math.toRadians(120)){
+                    drive.frontYkA.setPosition(0.5);
+                }
+
+                drive.LF.setPower(-0.7);
+                drive.LB.setPower(0.7);
+                drive.RF.setPower(-0.7);
+                drive.RB.setPower(0.7);
+                telemetry.addData("Heading", drive.imu.getAngularOrientation().firstAngle);
+                telemetry.update();
+            }
+            drive.killAll();
+
+
+            //TODO: unclamp code
+
+            drive.backs.setPosition(1);
+
+            //TODO: drop front wheels
+
+            drive.leftArm.setPosition(1);
+            drive.rightArm.setPosition(0);
 
             drive.frontYkA.setPosition(0.75);
 
-            drive.setPoseEstimate(new Pose2d(45, 48, Math.toRadians(179)));
+            drive.setPoseEstimate(new Pose2d(45, -48, Math.toRadians(179)));
 
             drive.relayPose(telemetry, drive);
 
@@ -542,13 +639,20 @@ public class New_Blue extends LinearOpMode {
                             .build()
             );
 
-            //TODO: raise front arm
+        }
 
+        telemetry.addData("Final angle", drive.imu.getAngularOrientation().firstAngle);
 
-            //TODO: tape measure code
+        if(drive.imu.getAngularOrientation().firstAngle < 0) {
+            double finalOffset = Math.toRadians(180) + drive.imu.getAngularOrientation().firstAngle;
+            //niggaaaaaaaaaa
+            drive.turnSync(-finalOffset, drive.RF, drive.LB);
+        }
 
-            //sleep(1000);
-
+        if(drive.imu.getAngularOrientation().firstAngle > 0) {
+            double finalOffset = Math.toRadians(180) - drive.imu.getAngularOrientation().firstAngle;
+            //niggaaaaaaaaaa
+            drive.turnSync(-finalOffset, drive.RF, drive.LB);
         }
 
 

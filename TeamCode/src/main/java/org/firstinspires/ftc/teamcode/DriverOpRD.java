@@ -9,12 +9,16 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 import org.firstinspires.ftc.teamcode.util.MecanumPowers;
 import org.firstinspires.ftc.teamcode.util.MecanumUtil;
+import org.openftc.revextensions2.ExpansionHubEx;
 
 @TeleOp(name="Teleop Facing Left")
 public class DriverOpRD extends LinearOpMode {
     SampleMecanumDriveREVOptimized robot;
 
     boolean headingAdjust = true;
+
+    public static final double OUTSIDE = 0.71;
+    public static final double INSIDE = 0;
 
     @Override
     public void runOpMode(){
@@ -24,18 +28,25 @@ public class DriverOpRD extends LinearOpMode {
 
         boolean heartbeat = false;
         boolean strobe = false;
+        double voltage;
 
         ElapsedTime time = new ElapsedTime();
 
         robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE);
 
-        robot.primeServo();
-        telemetry.addLine("Ready");
+        double startingAngle = robot.getExternalHeading();
 
+        //robot.primeServo();
+        telemetry.addLine("Ready");
+        //Pepega Clap 777 Oi 3Head ANY BRUVS?
 
         waitForStart();
 
-        robot.turner.setPosition(1);
+        robot.turner.setPosition(INSIDE);
+        robot.backYk.setPosition(0);
+        robot.backYkA.setPosition(0.1);
+        robot.frontYk.setPosition(0.5);
+        robot.frontYkA.setPosition(0.75);
 
         time.reset();
         time.startTimeNanoseconds();
@@ -45,6 +56,20 @@ public class DriverOpRD extends LinearOpMode {
 
             //telemetry.addData("Time", time.time());
             //telemetry.update();
+
+            voltage = robot.hub.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS);
+            if(voltage < 12.55){
+                telemetry.addData("Voltage", voltage);
+                telemetry.addLine("Voltage has reached critically low levels");
+                telemetry.update();
+            }
+            if(voltage >= 12.55){
+                telemetry.addData("Voltage", voltage);
+                telemetry.addLine("Voltage is okay");
+                telemetry.update();
+            }
+
+
 
             if(time.time() >= 100 && !heartbeat && !strobe){
                 robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_RED);
@@ -100,7 +125,6 @@ public class DriverOpRD extends LinearOpMode {
 
             double spoolpowr = gamepad2.right_trigger - gamepad2.left_trigger;
             robot.spool.setPower(spoolpowr);
-
 
             if(gamepad1.a){
                 robot.backs.setPosition(0);
@@ -184,31 +208,43 @@ public class DriverOpRD extends LinearOpMode {
             }
 
             if(gamepad2.dpad_left){
-                robot.turner.setPosition(0);
+                robot.turner.setPosition(OUTSIDE);
             }
 
             if(gamepad2.dpad_right){
-                robot.turner.setPosition(1);
+                robot.turner.setPosition(INSIDE);
             }
 
             if(gamepad2.left_bumper){
-                robot.i = robot.turner.getPosition();
-                while(robot.i > 0 && opModeIsActive()){
-                    robot.i = robot.i - 0.05;
-                    robot.turner.setPosition(robot.i);
-                    robot.teleActivity(gamepad1, gamepad2);
-                    sleep(100);
-                }
+                robot.cap.setPosition(0.5);
             }
 
             if (gamepad2.right_bumper){
-                robot.i = robot.turner.getPosition();
-                while(robot.i < 1 && opModeIsActive()) {
-                    robot.i = robot.i + 0.05;
-                    robot.turner.setPosition(robot.i);
-                    robot.teleActivity(gamepad1, gamepad2);
-                    sleep(100);
+                robot.cap.setPosition(1);
+            }
+
+            if(gamepad2.left_stick_y < 0){
+
+
+                while(gamepad2.left_stick_y < 0) {
+                    robot.LF.setPower(-gamepad2.left_stick_y*-0.2);
+                    robot.LB.setPower(-gamepad2.left_stick_y*0.2);
+                    robot.RF.setPower(-gamepad2.left_stick_y*0.2);
+                    robot.RB.setPower(-gamepad2.left_stick_y*-0.2);
                 }
+                robot.killAll();
+            }
+
+            if(gamepad2.left_stick_y > 0){
+
+                while(gamepad2.left_stick_y > 0) {
+                    robot.LF.setPower(gamepad2.left_stick_y*0.2);
+                    robot.LB.setPower(gamepad2.left_stick_y*-0.2);
+                    robot.RF.setPower(gamepad2.left_stick_y*-0.2);
+                    robot.RB.setPower(gamepad2.left_stick_y*0.2);
+                }
+                robot.killAll();
+
             }
 
 
