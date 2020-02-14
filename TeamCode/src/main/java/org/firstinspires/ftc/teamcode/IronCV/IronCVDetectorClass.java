@@ -151,7 +151,7 @@ public class IronCVDetectorClass {
             Imgproc.putText(all,"IRONCV - Developed by Vedant Thorat", new Point(5,30),0,1,new Scalar(255,0,0),2);
 
             if(valLeft < 200 && valMid > 210 && valRight > 210){
-                Imgproc.putText(all,"DETECED - LEFT", new Point(180,440),0,1,new Scalar(255,0,0),2);
+                Imgproc.putText(all,"DETECTED - LEFT", new Point(180,440),0,1,new Scalar(255,0,0),2);
             }else if(valLeft > 210 && valMid < 200 && valRight > 210){
                 Imgproc.putText(all,"DETECTED - MIDDLE", new Point(180,440),0,1,new Scalar(255,0,0),2);
             }else if(valLeft > 210 && valMid > 210 && valRight < 200){

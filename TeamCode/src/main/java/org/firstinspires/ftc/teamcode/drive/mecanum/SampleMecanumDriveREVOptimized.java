@@ -48,7 +48,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     public ExpansionHubEx hub;
     public ExpansionHubEx hub2;
     public ExpansionHubMotor LF, LB, RB, RF;
-    public DcMotor lColl, rColl, spool;
+    public DcMotor lColl, rColl, spool, spool2;
     public Servo backs, leftArm, rightArm, grabber, turner, frontYkA, backYkA, frontYk, backYk, cap;
     public RevBlinkinLedDriver blinkinLedDriver;
     private List<ExpansionHubMotor> driveMotors;
@@ -65,9 +65,6 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
-        // TODO: adjust the names of the following hardware devices to match your configuration
-        // for simplicity, we assume that the desired IMU and drive motors are on the same hub
-        // if your motors are split between hubs, **you will need to add another bulk read**
         hub = hardwareMap.get(ExpansionHubEx.class, "hub");
         hub2 = hardwareMap.get(ExpansionHubEx.class, "hub2");
 
@@ -102,6 +99,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         lColl = hardwareMap.get(DcMotor.class, "lc");
         rColl = hardwareMap.get(DcMotor.class, "rc");
         spool = hardwareMap.get(DcMotor.class, "spool");
+        spool2 = hardwareMap.get(DcMotor.class, "spool2");
 
         backs = hardwareMap.get(ExpansionHubServo.class, "backs");
         leftArm = hardwareMap.get(ExpansionHubServo.class, "lcoll");
@@ -121,16 +119,27 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         driveMotors = Arrays.asList(LF, LB, RB, RF);
 
-        for (ExpansionHubMotor motor : driveMotors) {
-            if (RUN_USING_ENCODER) {
-                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if(auto) {
+            for (ExpansionHubMotor motor : driveMotors) {
+                if (RUN_USING_ENCODER) {
+                    motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                }
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+
+        if(!auto){
+            for (ExpansionHubMotor motor : driveMotors) {
+                motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            }
         }
 
         rColl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lColl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         spool.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        spool2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
             setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
@@ -139,11 +148,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         // TODO: reverse any motors using DcMotor.setDirection()
         LF.setDirection(DcMotorSimple.Direction.REVERSE);
         RF.setDirection(DcMotorSimple.Direction.REVERSE);
-        //LB.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // TODO: if desired, use setLocalizer() to change the localization method
-        // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
-        //setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
 
         if(auto) {
             detector.camSetup(hardwareMap);
