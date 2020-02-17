@@ -23,8 +23,8 @@ public class DriverOpBL extends LinearOpMode {
 
     boolean headingAdjust = true;
 
-    public static final double OUTSIDE = 0.71;
-    public static final double INSIDE = 0;
+    public static final double OUTSIDE = 0.75;
+    public static final double INSIDE = 0.01;
 
 
     @Override
@@ -45,7 +45,7 @@ public class DriverOpBL extends LinearOpMode {
 
         //robot.primeServo();
         telemetry.addLine("Ready");
-            //Pepega Clap 777 Oi 3Head ANY BRUVS?
+        //Pepega Clap 777 Oi 3Head ANY BRUVS?
 
         waitForStart();
 
@@ -109,6 +109,7 @@ public class DriverOpBL extends LinearOpMode {
                 robot.setPowers(powers);
             }
             if(!headingAdjust){
+
                 double leftX = -gamepad1.left_stick_x; //-gamepad1.left_stick_x;
                 double leftY = -gamepad1.left_stick_y;
                 double angle = -Math.atan2(leftY, leftX) + Math.PI / 2;
@@ -123,6 +124,14 @@ public class DriverOpBL extends LinearOpMode {
                 robot.setPowers(powers);
             }
 
+            telemetry.addData("RF enc", robot.RF.getCurrentPosition());
+            telemetry.addData("RB enc", robot.RB.getCurrentPosition());
+            telemetry.addData("LF enc", robot.LF.getCurrentPosition());
+            telemetry.addData("LB enc", robot.LB.getCurrentPosition());
+            telemetry.addData("left odo", robot.lColl.getCurrentPosition());
+            telemetry.addData("right odo", robot.rColl.getCurrentPosition());
+            telemetry.addData("back odo", robot.spool2.getCurrentPosition());
+
             if(gamepad1.start){
                 headingAdjust = false;
             }
@@ -132,6 +141,7 @@ public class DriverOpBL extends LinearOpMode {
 
             double spoolpowr = gamepad2.right_trigger - gamepad2.left_trigger;
             robot.spool.setPower(spoolpowr);
+            robot.spool2.setPower(spoolpowr);
 
             if(gamepad1.a){
                 robot.backs.setPosition(0);
@@ -155,8 +165,8 @@ public class DriverOpBL extends LinearOpMode {
             }
 
             if(gamepad1.right_bumper){
-                robot.lColl.setPower(-0.7);
-                robot.rColl.setPower(0.7);
+                robot.lColl.setPower(-0.55);
+                robot.rColl.setPower(0.55);
             }
 
             if(gamepad1.left_bumper){
@@ -180,8 +190,8 @@ public class DriverOpBL extends LinearOpMode {
             if(gamepad1.dpad_right){
                 robot.followTrajectorySync(
                         robot.trajectoryBuilder()
-                        .strafeRight(1.5)
-                        .build()
+                                .strafeRight(1.5)
+                                .build()
                 );
             }
 
@@ -223,7 +233,7 @@ public class DriverOpBL extends LinearOpMode {
             }
 
             if(gamepad2.left_bumper){
-                robot.cap.setPosition(0.5);
+                robot.cap.setPosition(0.55);
             }
 
             if (gamepad2.right_bumper){

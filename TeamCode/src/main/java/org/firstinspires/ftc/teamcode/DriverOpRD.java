@@ -18,7 +18,7 @@ public class DriverOpRD extends LinearOpMode {
     boolean headingAdjust = true;
 
     public static final double OUTSIDE = 0.75;
-    public static final double INSIDE = 0;
+    public static final double INSIDE = 0.01;
 
     @Override
     public void runOpMode(){
@@ -121,6 +121,9 @@ public class DriverOpRD extends LinearOpMode {
             telemetry.addData("RB enc", robot.RB.getCurrentPosition());
             telemetry.addData("LF enc", robot.LF.getCurrentPosition());
             telemetry.addData("LB enc", robot.LB.getCurrentPosition());
+            telemetry.addData("left odo", robot.lColl.getCurrentPosition());
+            telemetry.addData("right odo", robot.rColl.getCurrentPosition());
+            telemetry.addData("back odo", robot.spool2.getCurrentPosition());
 
             if(gamepad1.start){
                 headingAdjust = false;
@@ -155,8 +158,8 @@ public class DriverOpRD extends LinearOpMode {
             }
 
             if(gamepad1.right_bumper){
-                robot.lColl.setPower(-0.7);
-                robot.rColl.setPower(0.7);
+                robot.lColl.setPower(-0.55);
+                robot.rColl.setPower(0.55);
             }
 
             if(gamepad1.left_bumper){
@@ -223,7 +226,7 @@ public class DriverOpRD extends LinearOpMode {
             }
 
             if(gamepad2.left_bumper){
-                robot.cap.setPosition(0.5);
+                robot.cap.setPosition(0.55);
             }
 
             if (gamepad2.right_bumper){

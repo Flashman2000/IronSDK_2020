@@ -119,22 +119,12 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         driveMotors = Arrays.asList(LF, LB, RB, RF);
 
-        if(auto) {
-            for (ExpansionHubMotor motor : driveMotors) {
-                if (RUN_USING_ENCODER) {
-                    motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                }
-                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            }
-        }
-
-        if(!auto){
             for (ExpansionHubMotor motor : driveMotors) {
                 motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
                 motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
-        }
+
 
         rColl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lColl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -149,7 +139,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         LF.setDirection(DcMotorSimple.Direction.REVERSE);
         RF.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+        //setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
 
         if(auto) {
             detector.camSetup(hardwareMap);
@@ -207,8 +197,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     public void setMotorPowers(double v, double v1, double v2, double v3) {
         LF.setPower(v);
         LB.setPower(v1);
-        RB.setPower(v2);
-        RF.setPower(v3);
+        RB.setPower(v2*0.99);
+        RF.setPower(v3*0.99);
     }
 
     @Override
@@ -220,9 +210,9 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     public void setPowers(MecanumPowers powers) {
         this.powers = powers;
         LF.setPower(powers.frontLeft);
-        RF.setPower(powers.frontRight);
+        RF.setPower(powers.frontRight*0.95);
         LB.setPower(powers.backLeft);
-        RB.setPower(powers.backRight);
+        RB.setPower(powers.backRight*0.95);
     }
 
     public void teleActivity(Gamepad gamepad1, Gamepad gamepad2){
