@@ -10,7 +10,7 @@
 The **beta** branch.... name kinda says it. This is the beta testing branch. Code in here usually isn't fully developed and may or may not be unstable. Beware.
 
 ## Project Status:
-**Developing triple stone autonomous and a new method system**
+**Developing quadruple stone autonomous and using RR**
 
 ## Changelog:
 
@@ -20,9 +20,9 @@ The **beta** branch.... name kinda says it. This is the beta testing branch. Cod
  - added `IronCV_Test` for beta testing the computer vision system
  
 ### Version 0.4-beta (10/27/2019)
- - New and improved IronCV computer vision system using a new methodology
+ - New and improved `IronCV` computer vision system using a new methodology
  - Installed RoadRunner and it's dependencies
- - Installed DogeCommander (will probably be depracated in the future)
+ - Installed DogeCommander (will probably be deprecated in the future)
  
  ### Version 1.0 (11/1/2019)
   - IronCV out of beta testing
@@ -38,3 +38,6 @@ The **beta** branch.... name kinda says it. This is the beta testing branch. Cod
   - New field-centric driving controls
   - Full integration of roadrunner
   - Edits to robot configuration
+  
+  ### Version 3.0.1-beta (2/18/2020)
+  - Code clean up
