@@ -31,3 +31,9 @@ The **beta** branch.... name kinda says it. This is the beta testing branch. Cod
   - Optimized TeleOp 
   - All-new 35 point auto
   - RGB integration :)
+  
+  ### Version 3.0 (2/7/2020)
+  It's been a while...
+  - New field-centric driving controls
+  - Full integration of roadrunner
+  - Edits to robot configuration
