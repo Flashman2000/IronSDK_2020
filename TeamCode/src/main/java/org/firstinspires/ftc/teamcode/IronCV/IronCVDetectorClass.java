@@ -33,9 +33,9 @@ public class IronCVDetectorClass {
     private float offsetX = 0f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
     private float offsetY = 0f/8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
 
-    private float[] midPos = {3.5f/8f+offsetX, 5f/8f+offsetY};//0 = col, 1 = row
-    private float[] leftPos = {1.5f/8f+offsetX, 5f/8f+offsetY};
-    private float[] rightPos = {5.5f/8f+offsetX, 5f/8f+offsetY};
+    private float[] midPos = {4f/8f+offsetX, 5f/8f+offsetY};//0 = col, 1 = row
+    private float[] leftPos = {2f/8f+offsetX, 5f/8f+offsetY};
+    private float[] rightPos = {6f/8f+offsetX, 5f/8f+offsetY};
     //moves all rectangles right or left by amount. units are in ratio to monitor
 
     private final int rows = 640;
@@ -151,7 +151,7 @@ public class IronCVDetectorClass {
             Imgproc.putText(all,"IRONCV - Developed by Vedant Thorat", new Point(5,30),0,1,new Scalar(255,0,0),2);
 
             if(valLeft < 200 && valMid > 210 && valRight > 210){
-                Imgproc.putText(all,"DETECED - LEFT", new Point(180,440),0,1,new Scalar(255,0,0),2);
+                Imgproc.putText(all,"DETECTED - LEFT", new Point(180,440),0,1,new Scalar(255,0,0),2);
             }else if(valLeft > 210 && valMid < 200 && valRight > 210){
                 Imgproc.putText(all,"DETECTED - MIDDLE", new Point(180,440),0,1,new Scalar(255,0,0),2);
             }else if(valLeft > 210 && valMid > 210 && valRight < 200){

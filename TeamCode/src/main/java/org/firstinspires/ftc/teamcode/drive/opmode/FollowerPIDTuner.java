@@ -7,19 +7,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 
 /*
- * Op mode for tuning follower PID coefficients. The robot drives in a DISTANCE-by-DISTANCE square
- * indefinitely.
+ * Op mode for tuning follower PID coefficients (located in the drive base classes). The robot
+ * drives in a DISTANCE-by-DISTANCE square indefinitely.
  */
 @Config
 @Autonomous(group = "drive")
 public class FollowerPIDTuner extends LinearOpMode {
-    public static double DISTANCE = 48;
+    public static double DISTANCE = 24;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDriveBase drive = new SampleMecanumDriveREV(hardwareMap);
+        SampleMecanumDriveREVOptimized drive = new SampleMecanumDriveREVOptimized(hardwareMap, false);
 
         drive.setPoseEstimate(new Pose2d(-DISTANCE / 2, -DISTANCE / 2, 0));
 
@@ -33,7 +34,7 @@ public class FollowerPIDTuner extends LinearOpMode {
                             .forward(DISTANCE)
                             .build()
             );
-            drive.turnSync(Math.toRadians(90));
+            drive.turnSync(Math.toRadians(90), drive.RF, drive.LB);
         }
     }
 }

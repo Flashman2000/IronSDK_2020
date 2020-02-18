@@ -26,7 +26,13 @@ import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
 import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
+import org.openftc.revextensions2.ExpansionHubMotor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * Base class with shared functionality for sample mecanum drives. All hardware-specific details are
@@ -56,10 +62,25 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
     private DriveConstraints constraints;
     private TrajectoryFollower follower;
 
+    private List<Double> lastWheelPositions;
+    private double lastTimestamp;
+
+    public String pos;
+
+    public double i;
+
+    public double correction;
+
+    public final double GAIN = 0.01;
+
+    public int[] vals;
+
     public SampleMecanumDriveBase() {
         super(kV, kA, kStatic, TRACK_WIDTH);
 
         dashboard = FtcDashboard.getInstance();
+        dashboard.setTelemetryTransmissionInterval(25);
+
         clock = NanoClock.system();
 
         mode = Mode.IDLE;
@@ -75,7 +96,9 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
         return new TrajectoryBuilder(getPoseEstimate(), constraints);
     }
 
-    public void turn(double angle) {
+    public void turn(double angle, ExpansionHubMotor RF, ExpansionHubMotor LB) {
+        RF.setDirection(DcMotorSimple.Direction.FORWARD);
+        LB.setDirection(DcMotorSimple.Direction.REVERSE);
         double heading = getPoseEstimate().getHeading();
         turnProfile = MotionProfileGenerator.generateSimpleMotionProfile(
                 new MotionState(heading, 0, 0, 0),
@@ -88,9 +111,11 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
         mode = Mode.TURN;
     }
 
-    public void turnSync(double angle) {
-        turn(angle);
+    public void turnSync(double angle, ExpansionHubMotor RF, ExpansionHubMotor LB) {
+        turn(angle, RF, LB);
         waitForIdle();
+        RF.setDirection(DcMotorSimple.Direction.REVERSE);
+        LB.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     public void followTrajectory(Trajectory trajectory) {
@@ -137,12 +162,14 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
         switch (mode) {
             case IDLE:
                 // do nothing
-                setDriveSignal(new DriveSignal());
                 break;
             case TURN: {
                 double t = clock.seconds() - turnStart;
 
                 MotionState targetState = turnProfile.get(t);
+
+                turnController.setTargetPosition(targetState.getX());
+
                 double targetOmega = targetState.getV();
                 double targetAlpha = targetState.getA();
                 double correction = turnController.update(currentPose.getHeading(), targetOmega);
@@ -196,6 +223,28 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
 
     public boolean isBusy() {
         return mode != Mode.IDLE;
+    }
+
+    public List<Double> getWheelVelocities() {
+        List<Double> positions = getWheelPositions();
+        double currentTimestamp = clock.seconds();
+
+        List<Double> velocities = new ArrayList<>(positions.size());;
+        if (lastWheelPositions != null) {
+            double dt = currentTimestamp - lastTimestamp;
+            for (int i = 0; i < positions.size(); i++) {
+                velocities.add((positions.get(i) - lastWheelPositions.get(i)) / dt);
+            }
+        } else {
+            for (int i = 0; i < positions.size(); i++) {
+                velocities.add(0.0);
+            }
+        }
+
+        lastTimestamp = currentTimestamp;
+        lastWheelPositions = positions;
+
+        return velocities;
     }
 
     public abstract PIDCoefficients getPIDCoefficients(DcMotor.RunMode runMode);

@@ -6,17 +6,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.TransitionSoftware.AutoTransitioner;
 import org.firstinspires.ftc.teamcode.configs.Monmon;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 
 @Autonomous(name = "Test Blue Plate")
 public class Blue_With_Plate extends LinearOpMode {
 
-    Monmon robot = new Monmon();
     String SkystoneLocation;
 
     @Override
     public void runOpMode(){
 
-        robot.initAuto(hardwareMap, telemetry, this, true);
+        SampleMecanumDriveREVOptimized robot = new SampleMecanumDriveREVOptimized(hardwareMap, true);
 
         robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_OCEAN_PALETTE);
 
@@ -34,7 +34,7 @@ public class Blue_With_Plate extends LinearOpMode {
         telemetry.addData("Position", SkystoneLocation);
         telemetry.update();
 
-        robot.alignSkystone(SkystoneLocation);
+        robot.alignSkystone(SkystoneLocation, this);
         robot.killAll();
         robot.resetEncoders();
 
@@ -54,7 +54,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.strafeLeftWithEnc(0.6, 350, this); //sped up
             robot.killAll();
             robot.resetEncoders();
-            robot.turnLeftGyro(85, this);
+            robot.turnLeftGyro(85, this, telemetry);
             robot.killAll();
             robot.setMaintainedHeading(85);
             robot.killAll();
@@ -100,7 +100,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.strafeLeftWithEnc(0.6, 750, this);
             robot.killAll();
             robot.resetEncoders();
-            robot.turnLeftGyro(85, this);
+            robot.turnLeftGyro(85, this, telemetry);
             robot.killAll();
             robot.setMaintainedHeading(85);
             robot.killAll();
@@ -135,7 +135,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.strafeLeftWithEnc(0.6, 350, this);
             robot.killAll();
             robot.resetEncoders();
-            robot.turnLeftGyro(80, this);
+            robot.turnLeftGyro(80, this, telemetry);
             robot.killAll();
             robot.setMaintainedHeading(85);
             robot.killAll();
@@ -180,7 +180,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.strafeLeftWithEnc(0.6, 400, this);
             robot.killAll();
             robot.resetEncoders();
-            robot.turnLeftGyro(80, this);
+            robot.turnLeftGyro(80, this,telemetry);
             robot.killAll();
             robot.setMaintainedHeading(85);
             robot.killAll();
@@ -214,7 +214,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.strafeLeftWithEnc(0.6, 420, this);
             robot.killAll();
             robot.resetEncoders();
-            robot.turnLeftGyro(80, this);
+            robot.turnLeftGyro(80, this,telemetry);
             robot.killAll();
             robot.setMaintainedHeading(85);
             robot.killAll();
@@ -262,7 +262,7 @@ public class Blue_With_Plate extends LinearOpMode {
             robot.strafeLeftWithEnc(0.6, 400, this);
             robot.killAll();
             robot.resetEncoders();
-            robot.turnLeftGyro(80, this);
+            robot.turnLeftGyro(80, this, telemetry);
             robot.killAll();
             robot.setMaintainedHeading(85);
             robot.killAll();
