@@ -3,7 +3,7 @@
   <br></br>
 <b>Developed by Vedant Thorat of Ironclad #8080</b>
   <br/>
-  <i>Version: 0.2-beta | Last Updated 10/18/2019</i>
+  <i>Version: 3.0 | Last Updated 02/07/2020</i>
 </div>
 
 # IronSDK(2020)
