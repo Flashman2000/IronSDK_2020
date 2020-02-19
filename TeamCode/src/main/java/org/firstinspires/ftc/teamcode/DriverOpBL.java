@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import com.acmerobotics.roadrunner.drive.Drive;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.configs.Monmon;
-import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREV;
+import org.firstinspires.ftc.teamcode.drive.localizer.StandardThreeWheelLocalizer;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 import org.firstinspires.ftc.teamcode.util.MecanumPowers;
 import org.firstinspires.ftc.teamcode.util.MecanumUtil;
@@ -20,6 +17,8 @@ import org.openftc.revextensions2.ExpansionHubEx;
 public class DriverOpBL extends LinearOpMode {
 
     SampleMecanumDriveREVOptimized robot;
+
+    StandardThreeWheelLocalizer odometers;
 
     boolean headingAdjust = true;
 
@@ -31,6 +30,7 @@ public class DriverOpBL extends LinearOpMode {
     public void runOpMode(){
 
         robot = new SampleMecanumDriveREVOptimized(hardwareMap, false);
+        odometers = new StandardThreeWheelLocalizer(hardwareMap);
         //robot.detector.webcam.stopStreaming();
 
         boolean heartbeat = false;
@@ -128,9 +128,9 @@ public class DriverOpBL extends LinearOpMode {
             telemetry.addData("RB enc", robot.RB.getCurrentPosition());
             telemetry.addData("LF enc", robot.LF.getCurrentPosition());
             telemetry.addData("LB enc", robot.LB.getCurrentPosition());
-            telemetry.addData("left odo", robot.lColl.getCurrentPosition());
-            telemetry.addData("right odo", robot.rColl.getCurrentPosition());
-            telemetry.addData("back odo", robot.spool2.getCurrentPosition());
+            telemetry.addData("left odo", odometers.leftEncoder.getCurrentPosition());
+            telemetry.addData("right odo", odometers.rightEncoder.getCurrentPosition());
+            telemetry.addData("back odo", odometers.backEncoder.getCurrentPosition());
 
             if(gamepad1.start){
                 headingAdjust = false;

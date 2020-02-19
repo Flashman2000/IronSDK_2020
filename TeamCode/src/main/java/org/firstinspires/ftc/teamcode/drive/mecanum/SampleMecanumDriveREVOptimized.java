@@ -8,7 +8,6 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.getMotorVeloci
 import android.support.annotation.NonNull;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -25,15 +24,10 @@ import java.util.List;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.IronCV.IronCVDetectorClass;
-import org.firstinspires.ftc.teamcode.drive.localizer.StandardTrackingWheelLocalizer;
-import org.firstinspires.ftc.teamcode.util.Line;
+import org.firstinspires.ftc.teamcode.drive.localizer.StandardThreeWheelLocalizer;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
-import org.firstinspires.ftc.teamcode.util.LynxOptimizedI2cFactory;
 import org.firstinspires.ftc.teamcode.util.MecanumPowers;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
@@ -139,7 +133,9 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         LF.setDirection(DcMotorSimple.Direction.REVERSE);
         RF.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+        StandardThreeWheelLocalizer localizer = new StandardThreeWheelLocalizer(hardwareMap);
+
+        setLocalizer(localizer);
 
         if(auto) {
             detector.camSetup(hardwareMap);
@@ -400,6 +396,14 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         killAll();
     }
 
+    public void fwd(double pwr){
+        //correction = checkDirection(GAIN);
+        LF.setPower(pwr);
+        LB.setPower(pwr);
+        RF.setPower(pwr);
+        RB.setPower(pwr);
+    }
+
     public void bckWithEncoder(double pwr, int pulses, LinearOpMode opmode){
         while(LF.getCurrentPosition() > -pulses && opmode.opModeIsActive()){
             correction = checkDirection(GAIN);
@@ -408,6 +412,14 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
             RF.setPower(-pwr - correction);
             RB.setPower(-pwr + correction);
         }
+    }
+
+    public void bck (double pwr){
+        correction = checkDirection(GAIN);
+        LF.setPower(-pwr - correction);
+        LB.setPower(-pwr + correction);
+        RF.setPower(-pwr - correction);
+        RB.setPower(-pwr + correction);
     }
 
     public void bckWithTime(double pwr, long time, LinearOpMode opmode){
@@ -439,6 +451,16 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
     }
 
+    public void strafeRight(double pwr){
+
+        //correction = checkDirection(GAIN);
+        LF.setPower(pwr);
+        LB.setPower(-pwr);
+        RF.setPower(-pwr);
+        RB.setPower(pwr);
+
+    }
+
     public void strafeRightWithTime(double pwr, long time, LinearOpMode opmode){
         correction = checkDirection(GAIN);
         LF.setPower(pwr - correction);
@@ -457,6 +479,14 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         RB.setPower(-pwr + correction);
         opmode.sleep(time);
         killAll();
+    }
+
+    public void strafeLeft(double pwr){
+        correction = checkDirection(GAIN);
+        LF.setPower(-pwr - correction);
+        LB.setPower(pwr + correction);
+        RF.setPower(pwr - correction);
+        RB.setPower(-pwr + correction);
     }
 
     public void diagRightWithEnc(double fwdpwr, double rhtpwr, int pulses, LinearOpMode opmode){

@@ -46,8 +46,7 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 2;
     public static double GEAR_RATIO = 0.5; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 14.31;
-
+    public static double TRACK_WIDTH = 16.35;
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
      * the built-in velocity PID, *these values are fine as is*. However, if you do not have drive
@@ -68,7 +67,7 @@ public class DriveConstants {
      */
 
     public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(
-            50.0, 50.0, 0.0,
+            80.0, 90.0, 0.0,
             Math.toRadians(180.0), Math.toRadians(180.0), 0.0
     );
 
