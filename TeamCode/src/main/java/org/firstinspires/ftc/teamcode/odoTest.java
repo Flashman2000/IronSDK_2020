@@ -9,9 +9,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.configs.Trajectories;
 import org.firstinspires.ftc.teamcode.drive.localizer.StandardThreeWheelLocalizer;
+import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveBase;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 import org.firstinspires.ftc.teamcode.util.Pose;
 import org.openftc.revextensions2.ExpansionHubEx;
+
+import kotlin.Unit;
 
 @Autonomous
 public class odoTest extends LinearOpMode {
@@ -28,6 +31,8 @@ public class odoTest extends LinearOpMode {
 
         double voltage = robot.hub.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS);
         double voltage2 = robot.hub.read12vMonitor(ExpansionHubEx.VoltageUnits.VOLTS);
+
+        final double offset = 0;
 
         Trajectories traj = new Trajectories();
 
@@ -51,6 +56,21 @@ public class odoTest extends LinearOpMode {
             }
 
         }
+
+        robot.followTrajectorySync(
+                robot.trajectoryBuilder()
+                .lineTo(new Vector2d(48,20), new ConstantInterpolator(0))
+                .addMarker(() -> {
+
+                    robot.poseCorrect(robot, 48, 20);
+
+                    return Unit.INSTANCE;
+
+                })
+                .build()
+        );
+        robot.update();
+        SampleMecanumDriveBase.update()
 
         while(odometery.getWheelPositions().get(2) > -24 && opModeIsActive()){
 
