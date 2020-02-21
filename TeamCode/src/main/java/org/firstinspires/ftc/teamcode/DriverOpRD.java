@@ -158,8 +158,8 @@ public class DriverOpRD extends LinearOpMode {
             }
 
             if(gamepad1.right_bumper){
-                robot.lColl.setPower(-0.55);
-                robot.rColl.setPower(0.55);
+                robot.lColl.setPower(-0.7);
+                robot.rColl.setPower(-0.7);
             }
 
             if(gamepad1.left_bumper){
@@ -169,7 +169,7 @@ public class DriverOpRD extends LinearOpMode {
 
             if(gamepad1.left_trigger > 0){
                 robot.lColl.setPower(0.3);
-                robot.rColl.setPower(-0.3);
+                robot.rColl.setPower(0.3);
             }
 
             if(gamepad1.dpad_left){

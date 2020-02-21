@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.configs.Field_Locations;
+import org.firstinspires.ftc.teamcode.drive.localizer.StandardThreeWheelLocalizer;
 import org.firstinspires.ftc.teamcode.drive.mecanum.SampleMecanumDriveREVOptimized;
 import org.firstinspires.ftc.teamcode.util.Pose;
 import org.opencv.core.Mat;
@@ -21,129 +22,321 @@ public class New_Red extends LinearOpMode {
     String drop = "Drop";
 
     @Override
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode() throws InterruptedException {
 
         SampleMecanumDriveREVOptimized drive = new SampleMecanumDriveREVOptimized(hardwareMap, true);
 
+        StandardThreeWheelLocalizer odometers = new StandardThreeWheelLocalizer(hardwareMap);
+
         Field_Locations locations = new Field_Locations();
 
-        ConstantInterpolator FACING_LZ = new ConstantInterpolator(Math.toRadians(180));
+        ConstantInterpolator FACING_LZ = new ConstantInterpolator(Math.toRadians(0));
 
-        drive.frontYkA.setPosition(0.75);
+
+        drive.backs.setPosition(1);
+
+        drive.frontYk.setPosition(0);
+        drive.frontYkA.setPosition(0.5);
+
+        //drive.frontYkA.setPosition(1);
+
+        while (!isStarted()) {
+
+            SkystoneLocation = drive.detectSkystone();
+            telemetry.addData("Skystone Location", SkystoneLocation);
+            telemetry.update();
+
+            if (opModeIsActive()) {
+                break;
+            }
+
+        }
+
+        double oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+        double oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+        double oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
 
         telemetry.addLine("Ready");
         telemetry.update();
 
-        waitForStart();
-
         SkystoneLocation = drive.detectSkystone();
 
-        drive.setPoseEstimate(new Pose2d(-36, -65, Math.toRadians(180)));
+        waitForStart();
 
-        telemetry.addData("Location", SkystoneLocation);
-        telemetry.update();
+        if (SkystoneLocation == "Right" || SkystoneLocation == "NOT DETECTED") {
 
-        if(SkystoneLocation == "Left" || SkystoneLocation =="NOT FOUND") {
+            drive.setMaintainedHeading(0);
 
-            drive.backYkA.setPosition(0.6);
-            drive.backYk.setPosition(0.5);
+            //Align with 3rd block
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    5500, oldOdometerPosL, oldOdometerPosR, this);
 
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redSkystone4V, FACING_LZ)
-                            .build()
-            );
+            drive.killAll();
 
-            drive.setPoseEstimate(locations.redSkystone4P);
-
-            //TODO: add grab code
-
-            drive.backYkA.setPosition(1);
-            sleep(200);
-            drive.backYk.setPosition(0);
-            drive.frontYk.setPosition(0.5);
-            sleep(500);
-            drive.backYkA.setPosition(0.25);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redPassingVector, FACING_LZ)
-                            .lineTo(locations.redFoundationPlate1V, FACING_LZ)
-                            .build()
-            );
-
-            //TODO: add drop code
-
-            drive.backYkA.setPosition(1);
-            sleep(200);
-            drive.backYk.setPosition(0.6);
-            drive.frontYk.setPosition(0.5);
-            sleep(500);
-            drive.backYkA.setPosition(0.25);
-
+            /*
             double offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
 
-            drive.turnTo(Math.toRadians(0));
+             */
 
-            drive.setPoseEstimate(locations.redFoundationPlate1P);
+            //lower claw
+            drive.frontYk.setPosition(0);
+            drive.frontYkA.setPosition(0.8);
 
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redPassingVector1, FACING_LZ)
-                            .lineTo(locations.redSkystone1V, FACING_LZ)
-                            .build()
-            );
-
-            drive.turnTo(Math.toRadians(0));
-
-            //TODO: add grab code
+            //sleep(50000);
 
 
-            drive.backYkA.setPosition(1);
+            //reset enc pos
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            //strafe to pickup first skystone
+            drive.strafeRightWithOdo(odometers.backEncoder, 41000, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            //grab the 1st skystone
+            drive.frontYkA.setPosition(1);
+            sleep(200);
+            drive.frontYk.setPosition(1);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.frontYkA.setPosition(0.6);
+
+            //fix offset
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
+             */
+
+            //reset encoder pos
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            //strafe left to drop first skystone
+            drive.strafeLeftWithOdo(odometers.backEncoder, 4500, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+
+             */
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    145000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+
+             */
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 8000, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+
+             */
+
+            drive.frontYkA.setPosition(1);
+            sleep(200);
+            drive.frontYk.setPosition(0);
+            sleep(200);
+            drive.frontYkA.setPosition(0.6);
+            sleep(100);
+            drive.frontYk.setPosition(0.75);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 5700, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    105000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+
+            drive.backYk.setPosition(1);
+
+            sleep(250);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 2500, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            drive.backYkA.setPosition(0);
             sleep(200);
             drive.backYk.setPosition(0);
-            drive.frontYkA.setPosition(0.75);
-            sleep(800);
-            drive.backYkA.setPosition(0.25);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.42);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 2700, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    122000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            sleep(150);
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 5600, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(1);
+            sleep(200);
+            drive.backYkA.setPosition(0.42);
+            sleep(100);
+            drive.backYk.setPosition(0.1);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 6400, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    137000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            drive.backYk.setPosition(1);
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 3100, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.42);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 2600, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    131500, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            sleep(150);
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 5500, oldOdometerPosB, this);
+
+            drive.killAll();
+
 
             drive.backs.setPosition(1);
-
-            drive.setPoseEstimate(locations.redSkystone1P);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redPassingVector1, FACING_LZ)
-                            .lineTo(locations.redFoundationPlate2V, FACING_LZ)
-                            .build()
-            );
-
-            drive.turnTo(Math.toRadians(0));
-
-            //TODO: add drop code
-            drive.backYkA.setPosition(1);
+            drive.backYkA.setPosition(0);
             sleep(200);
-            drive.backYk.setPosition(0.6);
-            drive.frontYk.setPosition(0.5);
-            sleep(500);
-            drive.backYkA.setPosition(0.2);
+            drive.backYk.setPosition(1);
+            sleep(200);
+            drive.backYkA.setPosition(0.42);
+            sleep(100);
+            drive.backYk.setPosition(0.1);
 
-            drive.setPoseEstimate(locations.redFoundationPlate2P);
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 6400, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(250);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.turnLeftWithOdo(odometers.backEncoder, 14150, oldOdometerPosB, this);
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .lineTo(locations.redPlateGrabVector, FACING_LZ)
-                            .build()
-            );
-
-            drive.turnTo(90);
-
-            drive.setPoseEstimate(new Pose2d(50, 28, drive.imu.getAngularOrientation().firstAngle));
-
-            drive.relayPose(telemetry, drive);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .back(15)
+                            .back(13)
                             .build()
             );
 
@@ -153,16 +346,349 @@ public class New_Red extends LinearOpMode {
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .forward(22)
+                            .forward(30)
                             .build()
             );
 
-            while (drive.imu.getAngularOrientation().firstAngle < Math.toRadians(180) && drive.imu.getAngularOrientation().firstAngle > Math.toRadians(0) && opModeIsActive()) {
+            while (drive.imu.getAngularOrientation().firstAngle < 180 && drive.imu.getAngularOrientation().firstAngle > 0 && opModeIsActive()) {
                 //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
                 //double pwr = Range.clip(Math.abs(0.011*(drive.imu.getAngularOrientation().firstAngle - Math.toRadians(180))), 0.3, 1);
 
-                if(drive.imu.getAngularOrientation().firstAngle > Math.toRadians(120)){
-                    drive.frontYkA.setPosition(0.5);
+                if (drive.imu.getAngularOrientation().firstAngle > 60) {
+                    drive.frontYkA.setPosition(0.9);
+                }
+
+                drive.LF.setPower(0.7);
+                drive.LB.setPower(-0.7);
+                drive.RF.setPower(0.7);
+                drive.RB.setPower(-0.7);
+                telemetry.addData("Heading", drive.imu.getAngularOrientation().firstAngle);
+                telemetry.update();
+            }
+            drive.killAll();
+
+
+            //TODO: unclamp code
+
+            drive.backs.setPosition(1);
+
+            //drive.setMaintainedHeading(180);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 2000, oldOdometerPosB, this);
+
+            drive.leftArm.setPosition(1);
+            drive.rightArm.setPosition(0);
+
+            sleep(250);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.frontYkA.setPosition(0.6);
+
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    42000, oldOdometerPosL, oldOdometerPosR, this);
+
+            //drive.strafeLeft(1);
+
+
+        }
+
+        if (SkystoneLocation == "Center") {
+
+            drive.setMaintainedHeading(0);
+
+            //Align with 3rd block
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    18000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            /*
+            double offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+
+             */
+
+            //lower claw
+            drive.backYk.setPosition(1);
+            drive.backYkA.setPosition(0.1);
+
+
+            //reset enc pos
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            //strafe to pickup first skystone
+            drive.strafeRightWithOdo(odometers.backEncoder, 41000, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            //grab the 1st skystone
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.42);
+
+            //fix offset
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
+             */
+
+            //reset encoder pos
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            //strafe left to drop first skystone
+            drive.strafeLeftWithOdo(odometers.backEncoder, 4500, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+
+             */
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    163000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+
+             */
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 8000, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+
+             */
+
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(1);
+            sleep(200);
+            drive.backYkA.setPosition(0.42);
+            sleep(100);
+            drive.backYk.setPosition(0.1);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 5700, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    125000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+
+            drive.backYk.setPosition(1);
+
+            sleep(250);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 2500, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.42);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 2700, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    132000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            sleep(150);
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 5600, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(1);
+            sleep(200);
+            drive.backYkA.setPosition(0.42);
+            sleep(100);
+            drive.backYk.setPosition(0.1);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 6400, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    115000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            drive.backYk.setPosition(1);
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 4200, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.42);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 2600, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    110000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            sleep(150);
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 5500, oldOdometerPosB, this);
+
+            drive.killAll();
+
+
+            drive.backs.setPosition(1);
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(1);
+            sleep(200);
+            drive.backYkA.setPosition(0.42);
+            sleep(100);
+            drive.backYk.setPosition(0.1);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 6400, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(250);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.turnLeftWithOdo(odometers.backEncoder, 14000, oldOdometerPosB, this);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .back(13)
+                            .build()
+            );
+
+            //TODO: clamp code
+            drive.backs.setPosition(0);
+            sleep(500);
+
+            drive.followTrajectorySync(
+                    drive.trajectoryBuilder()
+                            .forward(30)
+                            .build()
+            );
+
+            while (drive.imu.getAngularOrientation().firstAngle < 180 && drive.imu.getAngularOrientation().firstAngle > 0 && opModeIsActive()) {
+                //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
+                //double pwr = Range.clip(Math.abs(0.011*(drive.imu.getAngularOrientation().firstAngle - Math.toRadians(180))), 0.3, 1);
+
+                if (drive.imu.getAngularOrientation().firstAngle > 120) {
+                    drive.frontYkA.setPosition(0.9);
                 }
 
                 drive.LF.setPower(-0.7);
@@ -179,146 +705,303 @@ public class New_Red extends LinearOpMode {
 
             drive.backs.setPosition(1);
 
-            //TODO: drop front wheels
+            //drive.setMaintainedHeading(180);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdoNC(odometers.backEncoder, 2000, oldOdometerPosB, this);
 
             drive.leftArm.setPosition(1);
             drive.rightArm.setPosition(0);
 
-            drive.turnTo(180);
+            sleep(250);
 
-            drive.frontYkA.setPosition(0.75);
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.setPoseEstimate(new Pose2d(45, 48, Math.toRadians(179)));
+            drive.frontYkA.setPosition(0.6);
 
-            drive.relayPose(telemetry, drive);
+            drive.fwdWithOdoNC(odometers.leftEncoder, odometers.rightEncoder,
+                    40000, oldOdometerPosL, oldOdometerPosR, this);
 
-            //TODO: set new pose after empirical analysis
-
-            //sleep(500000);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .strafeLeft(0.5)
-                            .forward(32)
-                            .build()
-            );
-
-            //TODO: raise front arm
-
-
-            //TODO: tape measure code
-
-            //sleep(1000);
+            //drive.strafeLeft(1);
 
         }
 
-        if(SkystoneLocation == "Center"){
+        if (SkystoneLocation == "Left") {
 
-            drive.frontYkA.setPosition(0.4);
-            drive.frontYk.setPosition(0);
+            drive.setMaintainedHeading(0);
 
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redSkystone5V, FACING_LZ)
-                            .build()
-            );
+            //Align with 3rd block
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    29500, oldOdometerPosL, oldOdometerPosR, this);
 
-            drive.setPoseEstimate(locations.redSkystone5P);
+            drive.killAll();
 
-            //TODO: add grab code
-
-            drive.frontYkA.setPosition(0);
-            sleep(200);
-            drive.frontYk.setPosition(1);
-            drive.backYk.setPosition(0.5);
-            sleep(500);
-            drive.frontYkA.setPosition(0.65);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redPassingVector, FACING_LZ)
-                            .lineTo(locations.redFoundationPlate1V, FACING_LZ)
-                            .build()
-            );
-
-            //TODO: add drop code
-
-            drive.frontYkA.setPosition(0);
-            sleep(200);
-            drive.frontYk.setPosition(0);
-            drive.backYk.setPosition(0.5);
-            sleep(500);
-            drive.frontYkA.setPosition(0.75);
-
+            /*
             double offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
 
-            drive.turnSync(-offset, drive.RF, drive.LB);
+             */
 
-            drive.setPoseEstimate(locations.redFoundationPlate1P);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redPassingVector1, FACING_LZ)
-                            .lineTo(locations.redSkystone2V, FACING_LZ)
-                            .build()
-            );
-
-            offset = drive.imu.getAngularOrientation().firstAngle;
-
-            drive.turnSync(-offset, drive.RF, drive.LB);
-
-            //TODO: add grab code
+            //lower claw
+            drive.backYk.setPosition(1);
+            drive.backYkA.setPosition(0.1);
 
 
-            drive.frontYkA.setPosition(0);
+            //reset enc pos
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            //strafe to pickup first skystone
+            drive.strafeRightWithOdo(odometers.backEncoder, 41000, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            //grab the 1st skystone
+            drive.backYkA.setPosition(0);
             sleep(200);
-            drive.frontYk.setPosition(1);
-            drive.backYk.setPosition(0.5);
+            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.frontYkA.setPosition(0.65);
+            drive.backYkA.setPosition(0.42);
+
+            //fix offset
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(-offset, drive.RF, drive.LB);
+
+             */
+
+            //reset encoder pos
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            //strafe left to drop first skystone
+            drive.strafeLeftWithOdo(odometers.backEncoder, 4100, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+
+             */
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    174500, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+
+             */
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 8000, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            /*
+            offset = drive.imu.getAngularOrientation().firstAngle;
+            drive.turnSync(Math.toRadians(-offset), drive.RF, drive.LB);
+
+             */
+
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(1);
+            sleep(200);
+            drive.backYkA.setPosition(0.42);
+            sleep(100);
+            drive.backYk.setPosition(0.1);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 5700, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    136500, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+
+            drive.backYk.setPosition(1);
+
+            sleep(250);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 2500, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.42);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 2700, oldOdometerPosB, this);
+
+            drive.killAll();
+//pepega clap you fucking retard make it work 777 auto niggaaaaaaaaaaaaaaaaaaaaaa
+            sleep(150);
+
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    144500, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            sleep(150);
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 6600, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(1);
+            sleep(200);
+            drive.backYkA.setPosition(0.42);
+            sleep(100);
+            drive.backYk.setPosition(0.1);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 7400, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    116500, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            drive.backYk.setPosition(1);
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 4200, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            drive.backYkA.setPosition(0);
+            sleep(200);
+            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.backYkA.setPosition(0.42);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 2600, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    114000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            sleep(150);
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 5500, oldOdometerPosB, this);
+
+            drive.killAll();
+
 
             drive.backs.setPosition(1);
-
-            drive.setPoseEstimate(locations.redSkystone2P);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redPassingVector1, FACING_LZ)
-                            .lineTo(locations.redFoundationPlate2V, FACING_LZ)
-                            .build()
-            );
-
-            //drive.turnTo(Math.toRadians(180));
-            offset = drive.imu.getAngularOrientation().firstAngle;
-
-            drive.turnSync(-offset, drive.RF, drive.LB);
-
-
-            //TODO: add drop code
-            drive.frontYkA.setPosition(0);
+            drive.backYkA.setPosition(0);
             sleep(200);
-            drive.frontYk.setPosition(0);
-            drive.backYk.setPosition(0.5);
-            sleep(500);
-            drive.frontYkA.setPosition(0.75);
+            drive.backYk.setPosition(1);
+            sleep(200);
+            drive.backYkA.setPosition(0.42);
+            sleep(100);
+            drive.backYk.setPosition(0.1);
 
-            drive.setPoseEstimate(locations.redFoundationPlate2P);
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 6400, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(250);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.turnLeftWithOdo(odometers.backEncoder, 14000, oldOdometerPosB, this);
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .lineTo(locations.redPlateGrabVector, FACING_LZ)
-                            .build()
-            );
-
-            drive.turnTo(-90);
-
-            drive.setPoseEstimate(new Pose2d(50, 28, drive.imu.getAngularOrientation().firstAngle));
-
-            drive.relayPose(telemetry, drive);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .back(8)
+                            .back(13)
                             .build()
             );
 
@@ -328,22 +1011,22 @@ public class New_Red extends LinearOpMode {
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .forward(24)
+                            .forward(30)
                             .build()
             );
 
-            while (drive.imu.getAngularOrientation().firstAngle < Math.toRadians(180) && drive.imu.getAngularOrientation().firstAngle > Math.toRadians(0) && opModeIsActive()) {
+            while (drive.imu.getAngularOrientation().firstAngle < 180 && drive.imu.getAngularOrientation().firstAngle > 0 && opModeIsActive()) {
                 //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
                 //double pwr = Range.clip(Math.abs(0.011*(drive.imu.getAngularOrientation().firstAngle - Math.toRadians(180))), 0.3, 1);
 
-                if(drive.imu.getAngularOrientation().firstAngle < Math.toRadians(60)){
-                    drive.frontYkA.setPosition(0.5);
+                if (drive.imu.getAngularOrientation().firstAngle > 120) {
+                    drive.frontYkA.setPosition(0.9);
                 }
 
-                drive.LF.setPower(0.7);
-                drive.LB.setPower(-0.7);
-                drive.RF.setPower(0.7);
-                drive.RB.setPower(-0.7);
+                drive.LF.setPower(-0.7);
+                drive.LB.setPower(0.7);
+                drive.RF.setPower(-0.7);
+                drive.RB.setPower(0.7);
                 telemetry.addData("Heading", drive.imu.getAngularOrientation().firstAngle);
                 telemetry.update();
             }
@@ -354,220 +1037,31 @@ public class New_Red extends LinearOpMode {
 
             drive.backs.setPosition(1);
 
-            //TODO: drop front wheels
+            //drive.setMaintainedHeading(180);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdoNC(odometers.backEncoder, 2000, oldOdometerPosB, this);
 
             drive.leftArm.setPosition(1);
             drive.rightArm.setPosition(0);
 
-            offset = drive.imu.getAngularOrientation().firstAngle;
+            sleep(250);
 
-            drive.turnSync(-offset, drive.RF, drive.LB);
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.frontYkA.setPosition(0.75);
+            drive.frontYkA.setPosition(0.6);
 
-            drive.setPoseEstimate(new Pose2d(45, -48, Math.toRadians(179)));
+            drive.fwdWithOdoNC(odometers.leftEncoder, odometers.rightEncoder,
+                    42000, oldOdometerPosL, oldOdometerPosR, this);
 
-            drive.relayPose(telemetry, drive);
-
-            //TODO: set new pose after empirical analysis
-
-            //sleep(500000);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .strafeRight(5)
-                            .forward(32)
-                            .build()
-            );
-
-            //TODO: raise front arm
-
-
-            //TODO: tape measure code
-
-            //sleep(1000);
+            //drive.strafeLeft(1);
 
         }
-
-        if(SkystoneLocation == "Right"){
-
-            drive.frontYkA.setPosition(0.4);
-            drive.frontYk.setPosition(0);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redSkystone4V, FACING_LZ)
-                            .build()
-            );
-
-            drive.setPoseEstimate(locations.redSkystone4P);
-
-            //TODO: add grab code
-
-            drive.frontYkA.setPosition(0);
-            sleep(200);
-            drive.frontYk.setPosition(1);
-            drive.backYk.setPosition(0.5);
-            sleep(500);
-            drive.frontYkA.setPosition(0.65);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redPassingVector, FACING_LZ)
-                            .lineTo(locations.redFoundationPlate1V, FACING_LZ)
-                            .build()
-            );
-
-            //TODO: add drop code
-
-            drive.frontYkA.setPosition(0);
-            sleep(200);
-            drive.frontYk.setPosition(0);
-            drive.backYk.setPosition(0.5);
-            sleep(500);
-            drive.frontYkA.setPosition(0.75);
-
-            double offset = drive.imu.getAngularOrientation().firstAngle;
-
-            drive.turnSync(-offset, drive.RF, drive.LB);
-
-            drive.setPoseEstimate(locations.redFoundationPlate1P);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redPassingVector1, FACING_LZ)
-                            .lineTo(locations.redSkystone1V, FACING_LZ)
-                            .build()
-            );
-
-            offset = drive.imu.getAngularOrientation().firstAngle;
-
-            drive.turnSync(-offset, drive.RF, drive.LB);
-
-            //TODO: add grab code
-
-
-            drive.frontYkA.setPosition(0);
-            sleep(200);
-            drive.frontYk.setPosition(1);
-            drive.backYk.setPosition(0.5);
-            sleep(500);
-            drive.frontYkA.setPosition(0.65);
-
-            drive.backs.setPosition(1);
-
-            drive.setPoseEstimate(locations.redSkystone1P);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redPassingVector1, FACING_LZ)
-                            .lineTo(locations.redFoundationPlate2V, FACING_LZ)
-                            .build()
-            );
-
-            //drive.turnTo(Math.toRadians(180));
-            offset = drive.imu.getAngularOrientation().firstAngle;
-
-            drive.turnSync(-offset, drive.RF, drive.LB);
-
-
-            //TODO: add drop code
-            drive.frontYkA.setPosition(0);
-            sleep(200);
-            drive.frontYk.setPosition(0);
-            drive.backYk.setPosition(0.5);
-            sleep(500);
-            drive.frontYkA.setPosition(0.75);
-
-            drive.setPoseEstimate(locations.redFoundationPlate2P);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .lineTo(locations.redPlateGrabVector, FACING_LZ)
-                            .build()
-            );
-
-            drive.turnTo(-90);
-
-            drive.setPoseEstimate(new Pose2d(50, 28, drive.imu.getAngularOrientation().firstAngle));
-
-            drive.relayPose(telemetry, drive);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .back(8)
-                            .build()
-            );
-
-            //TODO: clamp code
-            drive.backs.setPosition(0);
-            sleep(500);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .forward(24)
-                            .build()
-            );
-
-            while (drive.imu.getAngularOrientation().firstAngle < Math.toRadians(180) && drive.imu.getAngularOrientation().firstAngle > Math.toRadians(0) && opModeIsActive()) {
-                //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
-                //double pwr = Range.clip(Math.abs(0.011*(drive.imu.getAngularOrientation().firstAngle - Math.toRadians(180))), 0.3, 1);
-
-                if(drive.imu.getAngularOrientation().firstAngle < Math.toRadians(60)){
-                    drive.frontYkA.setPosition(0.5);
-                }
-
-                drive.LF.setPower(0.7);
-                drive.LB.setPower(-0.7);
-                drive.RF.setPower(0.7);
-                drive.RB.setPower(-0.7);
-                telemetry.addData("Heading", drive.imu.getAngularOrientation().firstAngle);
-                telemetry.update();
-            }
-            drive.killAll();
-
-
-            //TODO: unclamp code
-
-            drive.backs.setPosition(1);
-
-            //TODO: drop front wheels
-
-            drive.leftArm.setPosition(1);
-            drive.rightArm.setPosition(0);
-
-            offset = drive.imu.getAngularOrientation().firstAngle;
-
-            drive.turnSync(-offset, drive.RF, drive.LB);
-
-            drive.frontYkA.setPosition(0.75);
-
-            drive.setPoseEstimate(new Pose2d(45, -48, Math.toRadians(179)));
-
-            drive.relayPose(telemetry, drive);
-
-            //TODO: set new pose after empirical analysis
-
-            //sleep(500000);
-
-            drive.followTrajectorySync(
-                    drive.trajectoryBuilder()
-                            .strafeRight(5)
-                            .forward(32)
-                            .build()
-            );
-
-            //TODO: raise front arm
-
-
-            //TODO: tape measure code
-
-            //sleep(1000);
-
-        }
-
-
 
     }
-
 }

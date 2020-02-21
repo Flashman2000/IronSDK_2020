@@ -22,7 +22,6 @@ public class StraightTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDriveREVOptimized drive = new SampleMecanumDriveREVOptimized(hardwareMap, false);
 
-        drive.setPoseEstimate(new Pose2d(0,0,0));
 
         Trajectory trajectory = drive.trajectoryBuilder()
                 .forward(DISTANCE)

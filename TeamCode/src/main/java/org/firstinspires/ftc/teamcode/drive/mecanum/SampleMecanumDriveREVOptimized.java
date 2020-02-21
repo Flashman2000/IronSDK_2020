@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.getMotorVeloci
 import android.support.annotation.NonNull;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -66,7 +67,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu 1");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
 
         /**
@@ -302,28 +303,138 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     }
 
     public void fwd(double pwr){
-        //correction = checkDirection(GAIN);
+        correction = checkDirection(GAIN);
+        LF.setPower(pwr-correction);
+        LB.setPower(pwr+correction);
+        RF.setPower(pwr-correction);
+        RB.setPower(pwr+correction);
+    }
+
+    public void bck (double pwr){
+        correction = checkDirection(GAIN);
+        LF.setPower(-pwr-correction);
+        LB.setPower(-pwr+correction);
+        RF.setPower(-pwr-correction);
+        RB.setPower(-pwr+correction);
+    }
+
+    public void strafeRight(double pwr){
+
+        correction = checkDirection(GAIN);
+        LF.setPower(pwr-correction);
+        LB.setPower(-pwr+correction);
+        RF.setPower(-pwr-correction);
+        RB.setPower(pwr+correction);
+
+    }
+
+    public void strafeLeft(double pwr){
+
+        correction = checkDirection(GAIN);
+        LF.setPower(-pwr-correction);
+        LB.setPower(pwr+correction);
+        RF.setPower(pwr-correction);
+        RB.setPower(-pwr+correction);
+
+    }
+
+    public void turnLeft(double pwr){
+        LF.setPower(-pwr);
+        LB.setPower(pwr);
+        RF.setPower(-pwr);
+        RB.setPower(pwr);
+    }
+
+    public void strafeLeftNC(double pwr){
+        LF.setPower(-pwr);
+        LB.setPower(pwr);
+        RF.setPower(pwr);
+        RB.setPower(-pwr);
+    }
+
+    public void fwdNC(double pwr){
         LF.setPower(pwr);
         LB.setPower(pwr);
         RF.setPower(pwr);
         RB.setPower(pwr);
     }
 
-    public void bck (double pwr){
-        correction = checkDirection(GAIN);
-        LF.setPower(-pwr - correction);
-        LB.setPower(-pwr + correction);
-        RF.setPower(-pwr - correction);
-        RB.setPower(-pwr + correction);
+    public void backWithOdo(ExpansionHubMotor leftOdo, ExpansionHubMotor rightOdo, double target, double oldPosL, double oldPosR, LinearOpMode opmode){
+
+        while (leftOdo.getCurrentPosition() > -target + oldPosL && rightOdo.getCurrentPosition() > -target + oldPosR && opmode.opModeIsActive()){
+            bck(0.8);
+            if(leftOdo.getCurrentPosition() < -target + 6000 + oldPosL && rightOdo.getCurrentPosition() > -target + 3000 + oldPosR){
+                bck(0.5);
+            }
+        }
+
     }
 
-    public void strafeRight(double pwr){
+    public void fwdWithOdo(ExpansionHubMotor leftOdo, ExpansionHubMotor rightOdo, double target, double oldPosL, double oldPosR, LinearOpMode opmode){
 
-        //correction = checkDirection(GAIN);
-        LF.setPower(pwr);
-        LB.setPower(-pwr);
-        RF.setPower(-pwr);
-        RB.setPower(pwr);
+        while (leftOdo.getCurrentPosition() < target + oldPosL && rightOdo.getCurrentPosition() > -target + oldPosR && opmode.opModeIsActive()){
+            fwd(0.8);
+            if(leftOdo.getCurrentPosition() > target - 6000 + oldPosL && rightOdo.getCurrentPosition() > -target + 3000 + oldPosR){
+                fwd(0.5);
+            }
+        }
+
+    }
+
+    public void fwdWithOdoNC(ExpansionHubMotor leftOdo, ExpansionHubMotor rightOdo, double target, double oldPosL, double oldPosR, LinearOpMode opmode){
+
+        while (leftOdo.getCurrentPosition() < target + oldPosL && rightOdo.getCurrentPosition() > -target + oldPosR && opmode.opModeIsActive()){
+            fwdNC(0.8);
+            if(leftOdo.getCurrentPosition() > target - 6000 + oldPosL && rightOdo.getCurrentPosition() > -target + 3000 + oldPosR){
+                fwdNC(0.5);
+            }
+        }
+
+    }
+
+    public void strafeRightWithOdo(ExpansionHubMotor backOdo, double target, double oldPosB, LinearOpMode opmode){
+
+        while (backOdo.getCurrentPosition() > -target + oldPosB && opmode.opModeIsActive()){
+            strafeRight(0.8);
+            if(backOdo.getCurrentPosition() < -target + oldPosB + 6000){
+                strafeRight(0.5);
+            }
+        }
+
+    }
+
+    public void strafeLeftWithOdo(ExpansionHubMotor backOdo, double target, double oldPosB, LinearOpMode opmode){
+
+        while (backOdo.getCurrentPosition() < target + oldPosB && opmode.opModeIsActive()){
+            strafeLeft(0.8);
+            if(backOdo.getCurrentPosition() > target + oldPosB - 6000){
+                strafeLeft(0.5);
+            }
+        }
+
+    }
+
+    public void strafeLeftWithOdoNC(ExpansionHubMotor backOdo, double target, double oldPosB, LinearOpMode opmode){
+
+        while (backOdo.getCurrentPosition() < target + oldPosB && opmode.opModeIsActive()){
+            strafeLeftNC(0.8);
+            if(backOdo.getCurrentPosition() > target + oldPosB - 6000){
+                strafeLeftNC(0.5);
+            }
+        }
+
+    }
+
+
+
+    public void turnLeftWithOdo(ExpansionHubMotor backodo, double target, double oldPosB, LinearOpMode opmode){
+
+        while (backodo.getCurrentPosition() > - target + oldPosB && opmode.opModeIsActive()){
+            turnLeft(0.8);
+            if(backodo.getCurrentPosition() < - target + oldPosB + 6000){
+                turnLeft(0.35);
+            }
+        }
 
     }
 

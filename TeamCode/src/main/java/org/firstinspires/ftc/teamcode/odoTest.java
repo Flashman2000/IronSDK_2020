@@ -59,45 +59,13 @@ public class odoTest extends LinearOpMode {
 
         robot.followTrajectorySync(
                 robot.trajectoryBuilder()
-                .lineTo(new Vector2d(48,20), new ConstantInterpolator(0))
-                .addMarker(() -> {
-
-                    robot.poseCorrect(robot, 48, 20);
-
-                    return Unit.INSTANCE;
-
-                })
+                .lineTo(new Vector2d(48, 24), new ConstantInterpolator(0))
+                .lineTo(new Vector2d(80, 0), new ConstantInterpolator(0))
                 .build()
         );
-        robot.update();
-        SampleMecanumDriveBase.update()
 
-        while(odometery.getWheelPositions().get(2) > -24 && opModeIsActive()){
 
-            telemetry.addData("y pos",odometery.getWheelPositions().get(2));
-            telemetry.update();
-
-            if(odometery.getWheelPositions().get(2) > -20){
-                robot.strafeRight(1);
-            }else{
-                robot.strafeRight(0.3);
-            }
-
-        }
-
-        while(odometery.getWheelPositions().get(0) < 96 && opModeIsActive()){
-
-            telemetry.addData("y pos",odometery.getWheelPositions().get(2));
-            telemetry.update();
-
-            if(odometery.getWheelPositions().get(0) < 92){
-                robot.fwd(1);
-            }else{
-                robot.fwd(0.3);
-            }
-
-        }
-
+        robot.poseCorrect(robot, 80, 0);
         robot.killAll();
 
         robot.relayPose(telemetry, robot);
