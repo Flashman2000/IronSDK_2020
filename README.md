@@ -3,7 +3,7 @@
   <br></br>
 <b>Developed by Vedant Thorat of Ironclad #8080</b>
   <br/>
-  <i>Version: 3.0.1-beta | Last Updated 02/18/2020</i>
+  <i>Version: 4.0 | Updated 02/28/2020</i>
 </div>
 
 # IronSDK
@@ -47,4 +47,4 @@ The **beta** branch.... name kinda says it. This is the beta testing branch. Cod
   - New tele-op binds for added hardware
   - New 3 stone autonomous with odometry
   - Motion profiling is temporarily removed due to some bugs
-  - We're going to worlds<img src="https://i.imgur.com/hKBySHB.png" width="2.5%" height="2.5%" class="center">!
+  - We're going to Worlds!<img src="https://i.imgur.com/hKBySHB.png" width="2.5%" height="2.5%" class="center">
