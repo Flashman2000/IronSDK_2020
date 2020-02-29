@@ -71,7 +71,7 @@ public abstract class SampleMecanumDriveBase extends MecanumDrive {
 
     public double correction;
 
-    public final double GAIN = 0.01;
+    public static final double GAIN = 0.04;
 
     public int[] vals;
 
