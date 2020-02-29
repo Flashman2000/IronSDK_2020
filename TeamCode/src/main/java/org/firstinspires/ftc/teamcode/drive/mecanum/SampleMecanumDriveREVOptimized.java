@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -47,6 +48,7 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
     public ExpansionHubMotor LF, LB, RB, RF;
     public DcMotor lColl, rColl, spool, spool2;
     public Servo backs, leftArm, rightArm, grabber, turner, frontYkA, backYkA, frontYk, backYk, cap;
+    public CRServo tapeMeasure;
     public RevBlinkinLedDriver blinkinLedDriver;
     private List<ExpansionHubMotor> driveMotors;
     public BNO055IMU imu;
@@ -67,7 +69,11 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu 1");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        if(auto) {
+            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        }if(!auto){
+            parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        }
         imu.initialize(parameters);
 
         /**
@@ -101,6 +107,8 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         backs = hardwareMap.get(ExpansionHubServo.class, "backs");
         leftArm = hardwareMap.get(ExpansionHubServo.class, "lcoll");
         rightArm = hardwareMap.get(ExpansionHubServo.class, "rcoll");
+
+        tapeMeasure = hardwareMap.get(CRServo.class, "tm");
 
         grabber = hardwareMap.get(ExpansionHubServo.class, "grab");
         turner = hardwareMap.get(ExpansionHubServo.class, "turn");

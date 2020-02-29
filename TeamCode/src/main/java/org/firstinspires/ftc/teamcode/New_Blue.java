@@ -67,7 +67,7 @@ public class New_Blue extends LinearOpMode {
 
             //Align with 3rd block
             drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                                7500, oldOdometerPosL, oldOdometerPosR, this);
+                                8200, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -88,7 +88,7 @@ public class New_Blue extends LinearOpMode {
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
             //strafe to pickup first skystone
-            drive.strafeRightWithOdo(odometers.backEncoder, 41000, oldOdometerPosB, this);
+            drive.strafeRightWithOdo(odometers.backEncoder, 43000, oldOdometerPosB, this);
 
             drive.killAll();
 
@@ -98,7 +98,7 @@ public class New_Blue extends LinearOpMode {
             drive.backYk.setPosition(0);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.42);
+            drive.backYkA.setPosition(0.40);
 
             //fix offset
             /*
@@ -134,7 +134,7 @@ public class New_Blue extends LinearOpMode {
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
             drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    145000, oldOdometerPosL, oldOdometerPosR, this);
+                    148000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -183,7 +183,7 @@ public class New_Blue extends LinearOpMode {
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
             drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    105000, oldOdometerPosL, oldOdometerPosR, this);
+                    112000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -205,7 +205,7 @@ public class New_Blue extends LinearOpMode {
             drive.backYk.setPosition(0);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.42);
+            drive.backYkA.setPosition(0.40);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -218,7 +218,7 @@ public class New_Blue extends LinearOpMode {
             sleep(150);
 
             drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    122000, oldOdometerPosL, oldOdometerPosR, this);
+                    129000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -254,7 +254,7 @@ public class New_Blue extends LinearOpMode {
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
             drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    137000, oldOdometerPosL, oldOdometerPosR, this);
+                    144000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -268,7 +268,7 @@ public class New_Blue extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeRightWithOdo(odometers.backEncoder, 3100, oldOdometerPosB, this);
+            drive.strafeRightWithOdo(odometers.backEncoder, 3800, oldOdometerPosB, this);
 
             drive.killAll();
 
@@ -277,7 +277,7 @@ public class New_Blue extends LinearOpMode {
             drive.backYk.setPosition(0);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.42);
+            drive.backYkA.setPosition(0.40);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -290,7 +290,7 @@ public class New_Blue extends LinearOpMode {
             sleep(150);
 
             drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    131500, oldOdometerPosL, oldOdometerPosR, this);
+                    138500, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -401,7 +401,7 @@ public class New_Blue extends LinearOpMode {
 
             //Align with 3rd block
             drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    18000, oldOdometerPosL, oldOdometerPosR, this);
+                    22000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -517,7 +517,7 @@ public class New_Blue extends LinearOpMode {
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
             drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    125000, oldOdometerPosL, oldOdometerPosR, this);
+                    120000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -530,7 +530,7 @@ public class New_Blue extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeRightWithOdo(odometers.backEncoder, 2500, oldOdometerPosB, this);
+            drive.strafeRightWithOdo(odometers.backEncoder, 4800, oldOdometerPosB, this);
 
             drive.killAll();
 
@@ -545,14 +545,14 @@ public class New_Blue extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeLeftWithOdo(odometers.backEncoder, 2700, oldOdometerPosB, this);
+            drive.strafeLeftWithOdo(odometers.backEncoder, 4700, oldOdometerPosB, this);
 
             drive.killAll();
 
             sleep(150);
 
             drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    132000, oldOdometerPosL, oldOdometerPosR, this);
+                    135000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -588,7 +588,7 @@ public class New_Blue extends LinearOpMode {
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
             drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    115000, oldOdometerPosL, oldOdometerPosR, this);
+                    123000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -602,7 +602,7 @@ public class New_Blue extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeRightWithOdo(odometers.backEncoder, 4200, oldOdometerPosB, this);
+            drive.strafeRightWithOdo(odometers.backEncoder, 6750, oldOdometerPosB, this);
 
             drive.killAll();
 
@@ -733,7 +733,7 @@ public class New_Blue extends LinearOpMode {
 
             //Align with 3rd block
             drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    29500, oldOdometerPosL, oldOdometerPosR, this);
+                    32000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -862,7 +862,7 @@ public class New_Blue extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeRightWithOdo(odometers.backEncoder, 2500, oldOdometerPosB, this);
+            drive.strafeRightWithOdo(odometers.backEncoder, 4500, oldOdometerPosB, this);
 
             drive.killAll();
 

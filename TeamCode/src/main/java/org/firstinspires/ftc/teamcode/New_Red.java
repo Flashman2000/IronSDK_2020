@@ -70,7 +70,7 @@ public class New_Red extends LinearOpMode {
 
             //Align with 3rd block
             drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    5500, oldOdometerPosL, oldOdometerPosR, this);
+                    4000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -139,7 +139,7 @@ public class New_Red extends LinearOpMode {
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
             drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    145000, oldOdometerPosL, oldOdometerPosR, this);
+                    148000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -188,12 +188,12 @@ public class New_Red extends LinearOpMode {
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
             drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    105000, oldOdometerPosL, oldOdometerPosR, this);
+                    108000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
 
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
 
             sleep(250);
 
@@ -205,12 +205,12 @@ public class New_Red extends LinearOpMode {
 
             drive.killAll();
 
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(1);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -236,13 +236,13 @@ public class New_Red extends LinearOpMode {
 
             drive.killAll();
 
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
             sleep(200);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
             sleep(100);
-            drive.backYk.setPosition(0.1);
+            drive.frontYk.setPosition(0.75);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -265,7 +265,7 @@ public class New_Red extends LinearOpMode {
 
             sleep(150);
 
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
 
             sleep(150);
 
@@ -277,12 +277,12 @@ public class New_Red extends LinearOpMode {
 
             drive.killAll();
 
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(1);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -310,13 +310,13 @@ public class New_Red extends LinearOpMode {
 
 
             drive.backs.setPosition(1);
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
             sleep(200);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
             sleep(100);
-            drive.backYk.setPosition(0.1);
+            drive.frontYk.setPosition(0.75);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -404,8 +404,8 @@ public class New_Red extends LinearOpMode {
             drive.setMaintainedHeading(0);
 
             //Align with 3rd block
-            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    18000, oldOdometerPosL, oldOdometerPosR, this);
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    14500, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -416,8 +416,8 @@ public class New_Red extends LinearOpMode {
              */
 
             //lower claw
-            drive.backYk.setPosition(1);
-            drive.backYkA.setPosition(0.1);
+            drive.frontYk.setPosition(0);
+            drive.frontYkA.setPosition(0.8);
 
 
             //reset enc pos
@@ -431,12 +431,12 @@ public class New_Red extends LinearOpMode {
             drive.killAll();
 
             //grab the 1st skystone
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(1);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
 
             //fix offset
             /*
@@ -471,7 +471,7 @@ public class New_Red extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
                     163000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
@@ -488,7 +488,7 @@ public class New_Red extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeRightWithOdo(odometers.backEncoder, 8000, oldOdometerPosB, this);
+            drive.strafeRightWithOdo(odometers.backEncoder, 8700, oldOdometerPosB, this);
 
             drive.killAll();
 
@@ -498,84 +498,13 @@ public class New_Red extends LinearOpMode {
 
              */
 
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
             sleep(200);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
             sleep(100);
-            drive.backYk.setPosition(0.1);
-
-            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
-            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
-            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
-
-            drive.strafeLeftWithOdo(odometers.backEncoder, 5700, oldOdometerPosB, this);
-
-            drive.killAll();
-
-            sleep(150);
-
-            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
-            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
-            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
-
-            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    125000, oldOdometerPosL, oldOdometerPosR, this);
-
-            drive.killAll();
-
-
-            drive.backYk.setPosition(1);
-
-            sleep(250);
-
-            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
-            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
-            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
-
-            drive.strafeRightWithOdo(odometers.backEncoder, 2500, oldOdometerPosB, this);
-
-            drive.killAll();
-
-            drive.backYkA.setPosition(0);
-            sleep(200);
-            drive.backYk.setPosition(0);
-            drive.frontYk.setPosition(0.5);
-            sleep(500);
-            drive.backYkA.setPosition(0.42);
-
-            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
-            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
-            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
-
-            drive.strafeLeftWithOdo(odometers.backEncoder, 2700, oldOdometerPosB, this);
-
-            drive.killAll();
-
-            sleep(150);
-
-            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    132000, oldOdometerPosL, oldOdometerPosR, this);
-
-            drive.killAll();
-
-            sleep(150);
-            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
-            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
-            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
-
-            drive.strafeRightWithOdo(odometers.backEncoder, 5600, oldOdometerPosB, this);
-
-            drive.killAll();
-
-            drive.backYkA.setPosition(0);
-            sleep(200);
-            drive.backYk.setPosition(1);
-            sleep(200);
-            drive.backYkA.setPosition(0.42);
-            sleep(100);
-            drive.backYk.setPosition(0.1);
+            drive.frontYk.setPosition(0.75);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -591,44 +520,115 @@ public class New_Red extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    115000, oldOdometerPosL, oldOdometerPosR, this);
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    118000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
-            sleep(150);
 
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
 
-            sleep(150);
+            sleep(250);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeRightWithOdo(odometers.backEncoder, 4200, oldOdometerPosB, this);
+            drive.strafeRightWithOdo(odometers.backEncoder, 3400, oldOdometerPosB, this);
 
             drive.killAll();
 
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(1);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeLeftWithOdo(odometers.backEncoder, 2600, oldOdometerPosB, this);
+            drive.strafeLeftWithOdo(odometers.backEncoder, 3700, oldOdometerPosB, this);
 
             drive.killAll();
 
             sleep(150);
 
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    137000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            sleep(150);
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 6000, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            drive.frontYkA.setPosition(1);
+            sleep(200);
+            drive.frontYk.setPosition(0);
+            sleep(200);
+            drive.frontYkA.setPosition(0.6);
+            sleep(100);
+            drive.frontYk.setPosition(0.75);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 6800, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
             drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    110000, oldOdometerPosL, oldOdometerPosR, this);
+                    122000, oldOdometerPosL, oldOdometerPosR, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            drive.frontYk.setPosition(0);
+
+            sleep(150);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeRightWithOdo(odometers.backEncoder, 5300, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            drive.frontYkA.setPosition(1);
+            sleep(200);
+            drive.frontYk.setPosition(1);
+            drive.frontYk.setPosition(0.5);
+            sleep(500);
+            drive.frontYkA.setPosition(0.6);
+
+            oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
+            oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
+            oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
+
+            drive.strafeLeftWithOdo(odometers.backEncoder, 3800, oldOdometerPosB, this);
+
+            drive.killAll();
+
+            sleep(150);
+
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    120000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -643,13 +643,13 @@ public class New_Red extends LinearOpMode {
 
 
             drive.backs.setPosition(1);
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
             sleep(200);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
             sleep(100);
-            drive.backYk.setPosition(0.1);
+            drive.frontYk.setPosition(0.75);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -687,14 +687,14 @@ public class New_Red extends LinearOpMode {
                 //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
                 //double pwr = Range.clip(Math.abs(0.011*(drive.imu.getAngularOrientation().firstAngle - Math.toRadians(180))), 0.3, 1);
 
-                if (drive.imu.getAngularOrientation().firstAngle > 120) {
+                if (drive.imu.getAngularOrientation().firstAngle > 60) {
                     drive.frontYkA.setPosition(0.9);
                 }
 
-                drive.LF.setPower(-0.7);
-                drive.LB.setPower(0.7);
-                drive.RF.setPower(-0.7);
-                drive.RB.setPower(0.7);
+                drive.LF.setPower(0.7);
+                drive.LB.setPower(-0.7);
+                drive.RF.setPower(0.7);
+                drive.RB.setPower(-0.7);
                 telemetry.addData("Heading", drive.imu.getAngularOrientation().firstAngle);
                 telemetry.update();
             }
@@ -711,7 +711,7 @@ public class New_Red extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeLeftWithOdoNC(odometers.backEncoder, 2000, oldOdometerPosB, this);
+            drive.strafeRightWithOdo(odometers.backEncoder, 2000, oldOdometerPosB, this);
 
             drive.leftArm.setPosition(1);
             drive.rightArm.setPosition(0);
@@ -724,7 +724,7 @@ public class New_Red extends LinearOpMode {
 
             drive.frontYkA.setPosition(0.6);
 
-            drive.fwdWithOdoNC(odometers.leftEncoder, odometers.rightEncoder,
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
                     40000, oldOdometerPosL, oldOdometerPosR, this);
 
             //drive.strafeLeft(1);
@@ -736,8 +736,8 @@ public class New_Red extends LinearOpMode {
             drive.setMaintainedHeading(0);
 
             //Align with 3rd block
-            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    29500, oldOdometerPosL, oldOdometerPosR, this);
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    27000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
@@ -748,8 +748,8 @@ public class New_Red extends LinearOpMode {
              */
 
             //lower claw
-            drive.backYk.setPosition(1);
-            drive.backYkA.setPosition(0.1);
+            drive.frontYk.setPosition(0);
+            drive.frontYkA.setPosition(0.8);
 
 
             //reset enc pos
@@ -763,12 +763,12 @@ public class New_Red extends LinearOpMode {
             drive.killAll();
 
             //grab the 1st skystone
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(1);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
 
             //fix offset
             /*
@@ -803,7 +803,7 @@ public class New_Red extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
                     174500, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
@@ -830,13 +830,13 @@ public class New_Red extends LinearOpMode {
 
              */
 
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
             sleep(200);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
             sleep(100);
-            drive.backYk.setPosition(0.1);
+            drive.frontYk.setPosition(0.75);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -852,13 +852,13 @@ public class New_Red extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    136500, oldOdometerPosL, oldOdometerPosR, this);
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    134000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
 
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
 
             sleep(250);
 
@@ -870,12 +870,12 @@ public class New_Red extends LinearOpMode {
 
             drive.killAll();
 
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(1);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -887,7 +887,7 @@ public class New_Red extends LinearOpMode {
 //pepega clap you fucking retard make it work 777 auto niggaaaaaaaaaaaaaaaaaaaaaa
             sleep(150);
 
-            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
                     144500, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
@@ -901,13 +901,13 @@ public class New_Red extends LinearOpMode {
 
             drive.killAll();
 
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
             sleep(200);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
             sleep(100);
-            drive.backYk.setPosition(0.1);
+            drive.frontYk.setPosition(0.75);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -923,14 +923,14 @@ public class New_Red extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
-                    116500, oldOdometerPosL, oldOdometerPosR, this);
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+                    114000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
 
             sleep(150);
 
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
 
             sleep(150);
 
@@ -938,28 +938,28 @@ public class New_Red extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeRightWithOdo(odometers.backEncoder, 4200, oldOdometerPosB, this);
+            drive.strafeRightWithOdo(odometers.backEncoder, 4500, oldOdometerPosB, this);
 
             drive.killAll();
 
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(0);
+            drive.frontYk.setPosition(1);
             drive.frontYk.setPosition(0.5);
             sleep(500);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeLeftWithOdo(odometers.backEncoder, 2600, oldOdometerPosB, this);
+            drive.strafeLeftWithOdo(odometers.backEncoder, 2900, oldOdometerPosB, this);
 
             drive.killAll();
 
             sleep(150);
 
-            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
+            drive.backWithOdo(odometers.leftEncoder, odometers.rightEncoder,
                     114000, oldOdometerPosL, oldOdometerPosR, this);
 
             drive.killAll();
@@ -975,13 +975,13 @@ public class New_Red extends LinearOpMode {
 
 
             drive.backs.setPosition(1);
-            drive.backYkA.setPosition(0);
+            drive.frontYkA.setPosition(1);
             sleep(200);
-            drive.backYk.setPosition(1);
+            drive.frontYk.setPosition(0);
             sleep(200);
-            drive.backYkA.setPosition(0.42);
+            drive.frontYkA.setPosition(0.6);
             sleep(100);
-            drive.backYk.setPosition(0.1);
+            drive.frontYk.setPosition(0.75);
 
             oldOdometerPosL = odometers.leftEncoder.getCurrentPosition();
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
@@ -1001,7 +1001,7 @@ public class New_Red extends LinearOpMode {
 
             drive.followTrajectorySync(
                     drive.trajectoryBuilder()
-                            .back(13)
+                            .back(15)
                             .build()
             );
 
@@ -1019,14 +1019,14 @@ public class New_Red extends LinearOpMode {
                 //double pwr = Range.clip((Math.pow(target,2) - Math.pow(imu.getAngularOrientation().firstAngle,2) / Math.pow(target,2)), 0.3, 1);
                 //double pwr = Range.clip(Math.abs(0.011*(drive.imu.getAngularOrientation().firstAngle - Math.toRadians(180))), 0.3, 1);
 
-                if (drive.imu.getAngularOrientation().firstAngle > 120) {
+                if (drive.imu.getAngularOrientation().firstAngle > 60) {
                     drive.frontYkA.setPosition(0.9);
                 }
 
-                drive.LF.setPower(-0.7);
-                drive.LB.setPower(0.7);
-                drive.RF.setPower(-0.7);
-                drive.RB.setPower(0.7);
+                drive.LF.setPower(0.7);
+                drive.LB.setPower(-0.7);
+                drive.RF.setPower(0.7);
+                drive.RB.setPower(-0.7);
                 telemetry.addData("Heading", drive.imu.getAngularOrientation().firstAngle);
                 telemetry.update();
             }
@@ -1043,7 +1043,7 @@ public class New_Red extends LinearOpMode {
             oldOdometerPosR = odometers.rightEncoder.getCurrentPosition();
             oldOdometerPosB = odometers.backEncoder.getCurrentPosition();
 
-            drive.strafeLeftWithOdoNC(odometers.backEncoder, 2000, oldOdometerPosB, this);
+            drive.strafeRightWithOdo(odometers.backEncoder, 2000, oldOdometerPosB, this);
 
             drive.leftArm.setPosition(1);
             drive.rightArm.setPosition(0);
@@ -1056,7 +1056,7 @@ public class New_Red extends LinearOpMode {
 
             drive.frontYkA.setPosition(0.6);
 
-            drive.fwdWithOdoNC(odometers.leftEncoder, odometers.rightEncoder,
+            drive.fwdWithOdo(odometers.leftEncoder, odometers.rightEncoder,
                     42000, oldOdometerPosL, oldOdometerPosR, this);
 
             //drive.strafeLeft(1);
