@@ -10,7 +10,7 @@
 The **beta** branch.... name kinda says it. This is the beta testing branch. Code in here usually isn't fully developed and may or may not be unstable. Beware.
 
 ## Project Status:
-**Developing quadruple stone autonomous and using RR**
+**Waiting for World's hardware changes**
 
 ## Changelog:
 
