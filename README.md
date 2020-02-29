@@ -47,4 +47,4 @@ The **beta** branch.... name kinda says it. This is the beta testing branch. Cod
   - New tele-op binds for added hardware
   - New 3 stone autonomous with odometry
   - Motion profiling is temporarily removed due to some bugs
-  - We're going to worlds!
+  - We're going to worlds<img src="https://i.imgur.com/hKBySHB.png" width="2.5%" height="2.5%" class="center">!
