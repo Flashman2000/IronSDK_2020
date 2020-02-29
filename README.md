@@ -41,3 +41,10 @@ The **beta** branch.... name kinda says it. This is the beta testing branch. Cod
   
   ### Version 3.0.1-beta (2/18/2020)
   - Code clean up
+  
+  ### Version 4.0 (2/21/2020)
+  - Final states level commit
+  - New tele-op binds for added hardware
+  - New 3 stone autonomous with odometry
+  - Motion profiling is temporarily removed due to some bugs
+  - We're going to worlds!
