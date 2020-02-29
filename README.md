@@ -19,7 +19,7 @@ First version of our compeition ready SDK. Future improvements will be made.
 The **beta** branch.... name kinda says it. This is the beta testing branch. Code in here usually isn't fully developed and may or may not be unstable. Beware.
 
 ## Project Status:
-**Developing triple stone autonomous and a new method system**
+**Waiting for World's hardware changes**
 
 ## Changelog:
  
@@ -37,3 +37,10 @@ The **beta** branch.... name kinda says it. This is the beta testing branch. Cod
   - New field-centric driving controls
   - Full integration of roadrunner
   - Edits to robot configuration
+  
+  ### Version 4.0 (2/21/2020)
+  - Final states level commit
+  - New tele-op binds for added hardware
+  - New 3 stone autonomous with odometry
+  - Motion profiling is temporarily removed due to some bugs
+  - We're going to Worlds!<img src="https://i.imgur.com/hKBySHB.png" width="2.5%" height="2.5%" class="center">
