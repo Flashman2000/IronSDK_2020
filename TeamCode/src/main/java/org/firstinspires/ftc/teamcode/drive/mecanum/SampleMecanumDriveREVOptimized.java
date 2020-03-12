@@ -124,11 +124,11 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
 
         driveMotors = Arrays.asList(LF, LB, RB, RF);
 
-            for (ExpansionHubMotor motor : driveMotors) {
-                motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        for (ExpansionHubMotor motor : driveMotors) {
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-                motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            }
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
 
 
         rColl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

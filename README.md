@@ -3,14 +3,14 @@
   <br></br>
 <b>Developed by Vedant Thorat of Ironclad #8080</b>
   <br/>
-  <i>Version: 3.0.1-beta | Last Updated 02/18/2020</i>
+  <i>Version: 4.0 | Updated 02/28/2020</i>
 </div>
 
 # IronSDK
 The **beta** branch.... name kinda says it. This is the beta testing branch. Code in here usually isn't fully developed and may or may not be unstable. Beware.
 
 ## Project Status:
-**Developing quadruple stone autonomous and using RR**
+**Waiting for World's hardware changes**
 
 ## Changelog:
 
@@ -41,3 +41,10 @@ The **beta** branch.... name kinda says it. This is the beta testing branch. Cod
   
   ### Version 3.0.1-beta (2/18/2020)
   - Code clean up
+  
+  ### Version 4.0 (2/21/2020)
+  - Final states level commit
+  - New tele-op binds for added hardware
+  - New 3 stone autonomous with odometry
+  - Motion profiling is temporarily removed due to some bugs
+  - We're going to Worlds!<img src="https://i.imgur.com/hKBySHB.png" width="2.5%" height="2.5%" class="center">
