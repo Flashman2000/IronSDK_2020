@@ -141,8 +141,9 @@ public class SampleMecanumDriveREVOptimized extends SampleMecanumDriveBase {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
+
         LF.setDirection(DcMotorSimple.Direction.REVERSE);
-        RF.setDirection(DcMotorSimple.Direction.REVERSE);
+        LB.setDirection(DcMotorSimple.Direction.REVERSE);
 
         StandardThreeWheelLocalizer localizer = new StandardThreeWheelLocalizer(hardwareMap);
 
