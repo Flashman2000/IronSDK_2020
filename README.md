@@ -19,7 +19,7 @@ First version of our compeition ready SDK. Future improvements will be made.
 The **beta** branch.... name kinda says it. This is the beta testing branch. Code in here usually isn't fully developed and may or may not be unstable. Beware.
 
 ## Project Status:
-**Waiting for World's hardware changes**
+**Waiting for World's hardware changes (Worlds was cancelled, this is the final level of development on this project)**
 
 ## Changelog:
  
