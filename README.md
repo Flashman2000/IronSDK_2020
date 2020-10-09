@@ -16,7 +16,7 @@ Ironclad 8080's programming repository. This repository is constantly being upda
 ## Project Status:
 First version of our compeition ready SDK. Future improvements will be made.
 # IronSDK
-The **beta** branch.... name kinda says it. This is the beta testing branch. Code in here usually isn't fully developed and may or may not be unstable. Beware.
+The **master** branch. Code in here is usually fully tested and functional, and won't make things blow up (usually).
 
 ## Project Status:
 **Waiting for World's hardware changes (Worlds was cancelled, this is the final level of development on this project)**
